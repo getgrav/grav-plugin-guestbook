@@ -1,0 +1,6 @@
+enabled: true
+use_captcha: false
+recatpcha_site_key: ''
+recatpcha_secret: ''
+enable_email_notifications: false
+notifications_email_to: 'copesc@gmail.com'
