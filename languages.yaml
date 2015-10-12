@@ -1,10 +1,5 @@
 en:
   PLUGIN_GUESTBOOK:
-    EMAIL_NOT_CONFIGURED: Email not configured
-    NEW_ENTRY_EMAIL_SUBJECT: 'New guestbook entry on %1$s'
-    NEW_ENTRY_EMAIL_BODY: '<p>A new entry was made on the guestbook of %1$s by %2$s (%3$s).</p><p>Text: %4$s</p>'
-    EMAIL_FOOTER: ''
     MESSAGES: Messages
     WRITTEN_ON: Written on
     BY: by
-    ADD_MESSAGE: Add a message

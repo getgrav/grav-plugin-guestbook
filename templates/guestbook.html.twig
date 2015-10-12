@@ -1,70 +1,12 @@
-{% extends 'partials/base.html.twig' %}
+{% extends 'default.html.twig' %}
 
 {% block content %}
 
+    {{ page.content }}
 
+    {% include "forms/form.html.twig" %}
 
     {% set use_captcha = grav.config.plugins.guestbook.use_captcha %}
-
-    <h3>{{'PLUGIN_GUESTBOOK.ADD_MESSAGE'|t}}</h3>
-
-    <script>
-    $(function() {
-        function validateEmail(email) {
-            var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-            return re.test(email);
-        }
-
-        $(document).on('click tap', '.js__add-new-entry', function(event) {
-            event.preventDefault();
-
-            var text = $('.js__new-entry-text').val();
-            var name = $('.js__new-entry-name').val();
-            var email = $('.js__new-entry-email').val();
-            var captcha = $('#g-recaptcha-response').val();
-
-            if (text.length == 0 || email.length == 0 || name.length == 0) {
-                $('.alert').html('Please fill all the fields');
-                $('.alert-container').show();
-                return;
-            }
-
-            if (!validateEmail(email)) {
-                $('.alert').html('Please enter a valid email');
-                $('.alert-container').show();
-                return;
-            }
-
-            {% if use_captcha %}
-            if (!captcha) {
-                $('.alert').html("Error validating the security code");
-                $('.alert-container').show();
-                return;
-            }
-            {% endif %}
-
-            $.ajax({
-                url: "{{ grav.uri.rootUrl }}/add-guestbook-entry",
-                data: {
-                    text: $('.js__new-entry-text').val(),
-                    name: $('.js__new-entry-name').val(),
-                    email: $('.js__new-entry-email').val(),
-                    lang: "{{ grav.language.getActive }}",
-                    {% if use_captcha %}recaptchaResponse: captcha{% endif %}
-                },
-                type: 'POST'
-            })
-            .success(function() {
-                $('.alert-container').hide();
-                window.location.reload();
-            })
-            .error(function() {
-                $('.alert').html("Error while posting the entry");
-                $('.alert-container').show();
-            });
-        });
-    });
-    </script>
 
     {% if use_captcha %}
         <script src="https://www.google.com/recaptcha/api.js?onload=captchaOnloadCallback&render=explicit" async defer></script>
@@ -95,17 +37,18 @@
                     .success(function(response) {
                         currentPage = parseInt(response.page);
 
-                        response.comments.forEach(function(comment) {
+                        response.messages.forEach(function(message) {
                             $('.js__messages-container').append('<tr>' +
-                                    '<td>' + message.text + '<br />{{'PLUGIN_COMMENTS.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_COMMENTS.BY'|t}} ' + comment.author + '</td></tr>');
+                                    '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
                         })
 
-                        var totalRetrieved = response.totalRetrieved * (parseInt(response.page) + 1);
+                        var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
 
                         $('.totalRetrieved').html(totalRetrieved);
                         $('.totalAvailable').html(response.totalAvailable);
 
-                        if (totalRetrieved == response.totalAvailable) {
+                        if (totalRetrieved >= response.totalAvailable) {
+                            $('.totalRetrieved').html($('.totalAvailable').html());
                             $('.js__load-more').hide();
                         }
                     })
@@ -117,29 +60,6 @@
         </script>
     {% endif %}
 
-    <div class="alert-container" style="display: none">
-        <blockquote>
-            <blockquote>
-                <blockquote>
-                    <blockquote>
-                        <p class="alert"></p>
-                    </blockquote>
-                </blockquote>
-            </blockquote>
-        </blockquote>
-    </div>
-
-    <form>
-        <textarea class="js__new-entry-text"></textarea>
-        Name: <input type="text" class="js__new-entry-name" />
-        Email: <input type="email" class="js__new-entry-email" />
-        {% if use_captcha %}
-            <div class="g-recaptcha" id="g-recaptcha"></div>
-        {% endif %}
-
-        <input type="submit" class="js__add-new-entry" />
-    </form>
-
     {% if grav.twig.guestbookMessages|length %}
 
         <h3>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h3>
@@ -150,17 +70,24 @@
                 <td>
                     {{message.text|e}}
                     <br />
-                    {{'PLUGIN_COMMENTS.WRITTEN_ON'|t}} {{message.date|e}} {{'PLUGIN_COMMENTS.BY'|t}} {{message.author|e}}
+                    {{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} {{message.date|e}} {{'PLUGIN_GUESTBOOK.BY'|t}} {{message.author|e}}
                 </td>
             </tr>
             {% endfor %}
         </table>
 
         {% if grav.twig.guestbookMessages.totalRetrieved < grav.twig.guestbookMessages.totalAvailable %}
-            <button type="button" class="button center js__load-more">
-                Load more
-            </button>
+            <form>
+                <div class="buttons">
+                    <button type="button" class="button js__load-more">
+                        Load more
+                    </button>
+                </div>
+            </form>
         {% endif %}
+
+        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}}</span></p>
+
     {% endif %}
 
 {% endblock %}
