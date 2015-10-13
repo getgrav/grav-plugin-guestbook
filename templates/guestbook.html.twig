@@ -6,59 +6,36 @@
 
     {% include "forms/form.html.twig" %}
 
-    {% set use_captcha = grav.config.plugins.guestbook.use_captcha %}
+    <script>
+        $(function() {
+            var currentPage = 0;
 
-    {% if use_captcha %}
-        <script src="https://www.google.com/recaptcha/api.js?onload=captchaOnloadCallback&render=explicit" async defer></script>
+            $(document).on('click tap', '.js__load-more', function(event) {
+               $.getJSON(window.location + '/page:' + (currentPage + 1))
+                .success(function(response) {
+                    currentPage = parseInt(response.page);
 
-        <script>
-            $(function() {
-                var captchaOnloadCallback = function captchaOnloadCallback() {
-                    grecaptcha.render('g-recaptcha', {
-                        'sitekey': "{{grav.config.plugins.guestbook.recatpcha_site_key}}",
-                        'callback': captchaValidatedCallback,
-                        'expired-callback': captchaExpiredCallback
-                    });
-                }
-
-                var captchaValidatedCallback = function captchaValidatedCallback() {
-                };
-
-                var captchaExpiredCallback = function captchaExpiredCallback() {
-                    grecaptcha.reset();
-                };
-            });
-
-            $(function() {
-                var currentPage = 0;
-
-                $(document).on('click tap', '.js__load-more', function(event) {
-                   $.getJSON(window.location + '/page:' + (currentPage + 1))
-                    .success(function(response) {
-                        currentPage = parseInt(response.page);
-
-                        response.messages.forEach(function(message) {
-                            $('.js__messages-container').append('<tr>' +
-                                    '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
-                        })
-
-                        var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
-
-                        $('.totalRetrieved').html(totalRetrieved);
-                        $('.totalAvailable').html(response.totalAvailable);
-
-                        if (totalRetrieved >= response.totalAvailable) {
-                            $('.totalRetrieved').html($('.totalAvailable').html());
-                            $('.js__load-more').hide();
-                        }
+                    response.messages.forEach(function(message) {
+                        $('.js__messages-container').append('<tr>' +
+                                '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
                     })
-                    .error(function() {
-                        alert('Unexpected error');
-                    });
+
+                    var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
+
+                    $('.totalRetrieved').html(totalRetrieved);
+                    $('.totalAvailable').html(response.totalAvailable);
+
+                    if (totalRetrieved >= response.totalAvailable) {
+                        $('.totalRetrieved').html($('.totalAvailable').html());
+                        $('.js__load-more').hide();
+                    }
+                })
+                .error(function() {
+                    alert('Unexpected error');
                 });
             });
-        </script>
-    {% endif %}
+        });
+    </script>
 
     {% if grav.twig.guestbookMessages|length %}
 
