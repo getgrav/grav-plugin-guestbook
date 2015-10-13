@@ -1,0 +1,50 @@
+name: Guestbook
+version: 0.1.0
+description: Adds a Guestbook functionality to a page
+icon: book
+author:
+  name: Team Grav
+  email: devs@getgrav.org
+  url: http://getgrav.org
+homepage: https://github.com/getgrav/grav-plugin-guestbook
+keywords: guestbook, plugin
+bugs: https://github.com/getgrav/grav-plugin-guestbook/issues
+readme: https://github.com/getgrav/grav-plugin-guestbook/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - form
+  - email
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 0
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    use_captcha:
+      type: toggle
+      label: Use Captcha
+      highlight: 1
+      default: 0
+      options:
+        1: 'True'
+        0: 'False'
+      validate:
+        type: bool
+
+    filename:
+      type: text
+      label: Filename
+      size: medium
+      placeholder: messages.yaml
+      default: messages.yaml
+      help: 'The filename where to store the guestbook messages, under user/data/guestbook'
