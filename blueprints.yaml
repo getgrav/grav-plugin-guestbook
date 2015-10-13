@@ -30,17 +30,6 @@ form:
       validate:
         type: bool
 
-    use_captcha:
-      type: toggle
-      label: Use Captcha
-      highlight: 1
-      default: 0
-      options:
-        1: 'True'
-        0: 'False'
-      validate:
-        type: bool
-
     filename:
       type: text
       label: Filename
