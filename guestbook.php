@@ -21,7 +21,9 @@ class GuestbookPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
-            'onFormProcessed' => ['onFormProcessed', 10]
+            'onFormProcessed' => ['onFormProcessed', 10],
+            'onDataTypeExcludeFromDataManagerPluginHook' => ['onDataTypeExcludeFromDataManagerPluginHook', 0],
+
         ];
     }
 
@@ -96,5 +98,13 @@ class GuestbookPlugin extends Plugin
     public function onTwigTemplatePaths()
     {
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
+    }
+
+    /**
+     * Exclude comments from the Data Manager plugin
+     */
+    public function onDataTypeExcludeFromDataManagerPluginHook()
+    {
+        $this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'guestbook';
     }
 }
