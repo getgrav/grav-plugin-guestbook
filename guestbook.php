@@ -21,6 +21,7 @@ class GuestbookPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onFormProcessed' => ['onFormProcessed', 10]
         ];
     }
 
@@ -32,17 +33,34 @@ class GuestbookPlugin extends Plugin
             $this->enable([
                 'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
             ]);
-
-            $page = $this->grav['uri']->param('page');
-            $messages = $this->getMessages($page);
-
-            if ($page > 0) {
-                echo json_encode($messages);
-                exit();
-            }
-
-            $this->grav['twig']->guestbookMessages = $messages;
         }
+    }
+
+
+    /**
+     * Handle form processing instructions.
+     *
+     * @param Event $event
+     */
+    public function onFormProcessed(Event $event)
+    {
+        $form = $event['form'];
+        $action = $event['action'];
+        $params = $event['params'];
+
+        if (!$this->active) {
+            return;
+        }
+
+        $page = $this->grav['uri']->param('page');
+        $messages = $this->getMessages($page);
+
+        if ($page > 0) {
+            echo json_encode($messages);
+            exit();
+        }
+
+        $this->grav['twig']->guestbookMessages = $messages;
     }
 
     private function getMessages($page = 0) {
