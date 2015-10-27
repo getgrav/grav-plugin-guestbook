@@ -23,7 +23,6 @@ class GuestbookPlugin extends Plugin
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
             'onFormProcessed' => ['onFormProcessed', 10],
             'onDataTypeExcludeFromDataManagerPluginHook' => ['onDataTypeExcludeFromDataManagerPluginHook', 0],
-
         ];
     }
 
@@ -35,9 +34,11 @@ class GuestbookPlugin extends Plugin
             $this->enable([
                 'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
             ]);
+
+            //Call this here to get the messages on the page load
+            $this->fetchMessages();
         }
     }
-
 
     /**
      * Handle form processing instructions.
@@ -46,14 +47,21 @@ class GuestbookPlugin extends Plugin
      */
     public function onFormProcessed(Event $event)
     {
-        $form = $event['form'];
-        $action = $event['action'];
-        $params = $event['params'];
-
         if (!$this->active) {
             return;
         }
 
+        //Call this here to get the messages updated after the form is processed
+        $this->fetchMessages();
+    }
+
+    /**
+     * Fetch the page messages.
+     *
+     * @param Event $event
+     */
+    public function fetchMessages()
+    {
         $page = $this->grav['uri']->param('page');
         $messages = $this->getMessages($page);
 
@@ -65,7 +73,8 @@ class GuestbookPlugin extends Plugin
         $this->grav['twig']->guestbookMessages = $messages;
     }
 
-    private function getMessages($page = 0) {
+    private function getMessages($page = 0)
+    {
         $itemsPerPage = 5;
 
         $lang = $this->grav['language']->getActive();
