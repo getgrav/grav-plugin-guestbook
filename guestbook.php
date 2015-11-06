@@ -23,6 +23,7 @@ class GuestbookPlugin extends Plugin
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
             'onFormProcessed' => ['onFormProcessed', 10],
             'onDataTypeExcludeFromDataManagerPluginHook' => ['onDataTypeExcludeFromDataManagerPluginHook', 0],
+            'onGetPageTemplates' => ['onGetPageTemplates', 0]
         ];
     }
 
@@ -38,6 +39,16 @@ class GuestbookPlugin extends Plugin
             //Call this here to get the messages on the page load
             $this->fetchMessages();
         }
+    }
+
+    /**
+     * Add page template types.
+     */
+    public function onGetPageTemplates(Event $event)
+    {
+        /** @var Types $types */
+        $types = $event->types;
+        $types->scanTemplates('plugins://guestbook/templates');
     }
 
     /**
