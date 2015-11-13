@@ -3,3 +3,9 @@ en:
     MESSAGES: Messages
     WRITTEN_ON: Written on
     BY: by
+    
+fr:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: Messages
+    WRITTEN_ON: Ecrits le
+    BY: par
