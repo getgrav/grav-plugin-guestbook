@@ -1,3 +1,9 @@
+# v0.2.2
+## 11/20/2015
+
+1. [](#bugfix)
+    * Only load the messages on guestbook pages, if the page exists
+
 # v0.2.1
 ## 11/06/2015
 

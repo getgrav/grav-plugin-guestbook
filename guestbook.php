@@ -33,6 +33,21 @@ class GuestbookPlugin extends Plugin
     {
         if (!$this->isAdmin()) {
             $this->enable([
+                'onPageInitialized' => ['onPageInitialized', 0]
+            ]);
+        }
+    }
+
+    /**
+     * Initialize configuration
+     */
+    public function onPageInitialized()
+    {
+        /** @var Page $page */
+        $page = $this->grav['page'];
+
+        if ($page->template() == 'guestbook') {
+            $this->enable([
                 'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
             ]);
 
