@@ -33,7 +33,8 @@ class GuestbookPlugin extends Plugin
     {
         if (!$this->isAdmin()) {
             $this->enable([
-                'onPageInitialized' => ['onPageInitialized', 0]
+                'onPageInitialized' => ['onPageInitialized', 0],
+                'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0]
             ]);
         }
     }
@@ -47,10 +48,6 @@ class GuestbookPlugin extends Plugin
         $page = $this->grav['page'];
 
         if ($page->template() == 'guestbook') {
-            $this->enable([
-                'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
-            ]);
-
             //Call this here to get the messages on the page load
             $this->fetchMessages();
         }
