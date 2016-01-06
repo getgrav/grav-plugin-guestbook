@@ -1,3 +1,9 @@
+# v0.3.0
+## 01/06/2016
+
+1. [](#bugfix)
+    * Correctly add the templates path
+
 # v0.2.2
 ## 11/20/2015
 
