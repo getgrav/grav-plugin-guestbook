@@ -1,5 +1,5 @@
 name: Guestbook
-version: 0.1.0
+version: 0.3.0
 description: Adds a Guestbook functionality to a page
 icon: book
 author:
@@ -27,17 +27,6 @@ form:
       options:
         1: Enabled
         0: Disabled
-      validate:
-        type: bool
-
-    use_captcha:
-      type: toggle
-      label: Use Captcha
-      highlight: 1
-      default: 0
-      options:
-        1: 'True'
-        0: 'False'
       validate:
         type: bool
 

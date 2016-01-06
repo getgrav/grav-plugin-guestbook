@@ -21,6 +21,9 @@ class GuestbookPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onFormProcessed' => ['onFormProcessed', 10],
+            'onDataTypeExcludeFromDataManagerPluginHook' => ['onDataTypeExcludeFromDataManagerPluginHook', 0],
+            'onGetPageTemplates' => ['onGetPageTemplates', 0]
         ];
     }
 
@@ -30,22 +33,71 @@ class GuestbookPlugin extends Plugin
     {
         if (!$this->isAdmin()) {
             $this->enable([
-                'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
+                'onPageInitialized' => ['onPageInitialized', 0],
+                'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0]
             ]);
-
-            $page = $this->grav['uri']->param('page');
-            $messages = $this->getMessages($page);
-
-            if ($page > 0) {
-                echo json_encode($messages);
-                exit();
-            }
-
-            $this->grav['twig']->guestbookMessages = $messages;
         }
     }
 
-    private function getMessages($page = 0) {
+    /**
+     * Initialize configuration
+     */
+    public function onPageInitialized()
+    {
+        /** @var Page $page */
+        $page = $this->grav['page'];
+
+        if ($page->template() == 'guestbook') {
+            //Call this here to get the messages on the page load
+            $this->fetchMessages();
+        }
+    }
+
+    /**
+     * Add page template types.
+     */
+    public function onGetPageTemplates(Event $event)
+    {
+        /** @var Types $types */
+        $types = $event->types;
+        $types->scanTemplates('plugins://guestbook/templates');
+    }
+
+    /**
+     * Handle form processing instructions.
+     *
+     * @param Event $event
+     */
+    public function onFormProcessed(Event $event)
+    {
+        if (!$this->active) {
+            return;
+        }
+
+        //Call this here to get the messages updated after the form is processed
+        $this->fetchMessages();
+    }
+
+    /**
+     * Fetch the page messages.
+     *
+     * @param Event $event
+     */
+    public function fetchMessages()
+    {
+        $page = $this->grav['uri']->param('page');
+        $messages = $this->getMessages($page);
+
+        if ($page > 0) {
+            echo json_encode($messages);
+            exit();
+        }
+
+        $this->grav['twig']->guestbookMessages = $messages;
+    }
+
+    private function getMessages($page = 0)
+    {
         $itemsPerPage = 5;
 
         $lang = $this->grav['language']->getActive();
@@ -78,5 +130,13 @@ class GuestbookPlugin extends Plugin
     public function onTwigTemplatePaths()
     {
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
+    }
+
+    /**
+     * Exclude comments from the Data Manager plugin
+     */
+    public function onDataTypeExcludeFromDataManagerPluginHook()
+    {
+        $this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'guestbook';
     }
 }
