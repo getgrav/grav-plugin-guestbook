@@ -1,3 +1,9 @@
+# v0.3.1
+## 07/14/2016
+
+1. [](#improved)
+    * Translate some blueprint options
+
 # v0.3.0
 ## 01/06/2016
 
