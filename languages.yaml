@@ -4,6 +4,12 @@ en:
     WRITTEN_ON: Written on
     BY: by
     
+de:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: Nachrichten
+    WRITTEN_ON: Geschrieben an
+    BY: von
+    
 fr:
   PLUGIN_GUESTBOOK:
     MESSAGES: Messages
