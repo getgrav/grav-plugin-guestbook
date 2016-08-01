@@ -15,3 +15,9 @@ fr:
     MESSAGES: Messages
     WRITTEN_ON: Écrit le
     BY: par
+ro:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: 'Mesaje'
+    WRITTEN_ON: 'Scrise în data de'
+    BY: 'de către'
+    
