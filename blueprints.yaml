@@ -9,7 +9,7 @@ author:
 homepage: https://github.com/getgrav/grav-plugin-guestbook
 keywords: guestbook, plugin
 bugs: https://github.com/getgrav/grav-plugin-guestbook/issues
-readme: https://github.com/getgrav/grav-plugin-guestbook/blob/develop/README.md
+docs: https://github.com/getgrav/grav-plugin-guestbook/blob/develop/README.md
 license: MIT
 
 dependencies:
