@@ -1,3 +1,12 @@
+# v0.4.0
+## 10/19/2016
+
+1. [](#improved)
+    * Added german translation
+    * Added romanian translation
+1. [](#bugfix)
+    * Fixed a french string
+
 # v0.3.1
 ## 07/14/2016
 

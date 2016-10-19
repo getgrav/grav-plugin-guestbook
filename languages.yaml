@@ -4,8 +4,20 @@ en:
     WRITTEN_ON: Written on
     BY: by
     
+de:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: Nachrichten
+    WRITTEN_ON: Geschrieben an
+    BY: von
+    
 fr:
   PLUGIN_GUESTBOOK:
     MESSAGES: Messages
-    WRITTEN_ON: Ecrits le
+    WRITTEN_ON: Écrit le
     BY: par
+ro:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: 'Mesaje'
+    WRITTEN_ON: 'Scrise în data de'
+    BY: 'de către'
+    
