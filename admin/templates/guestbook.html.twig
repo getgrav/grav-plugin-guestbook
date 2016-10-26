@@ -1,0 +1,97 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block content %}
+
+    {{ page.content }}
+	{% include "forms/form.html.twig" %}
+    <script>
+        $(function() {
+            var currentPage = 0;
+            $(document).on('click tap', '.js__load-more', function(event) {
+               $.getJSON(window.location + '/page:' + (currentPage + 1))
+                .success(function(response) {
+                    currentPage = parseInt(response.page);
+
+                    response.messages.forEach(function(message) {
+						var st = '<tr>' +
+                                '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '<br />                     <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button>                                       ';
+								
+								if (message.moderated != 1) {
+									st = st + '                 <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button>';
+								}
+								st = st + '</div></td></tr>';
+						
+                        $('.js__messages-container').append(st);
+                    })
+
+                    var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
+
+                    $('.totalRetrieved').html(totalRetrieved);
+                    $('.totalAvailable').html(response.totalAvailable);
+
+                    if (totalRetrieved >= response.totalAvailable) {
+                        $('.totalRetrieved').html($('.totalAvailable').html());
+                        $('.js__load-more').hide();
+                    }
+                })
+                .error(function() {
+                    alert('Unexpected error');
+                });
+            });
+			$( document ).ready(function() {
+				document.getElementById('load').click();
+			});
+			$(document).on('click tap', '.js__delete', function(event) {
+				$.getJSON(window.location + '/delete:' + event.target.id)
+					.success(function(response) {
+						alert("Message has been deleted!");
+						 event.target.parentNode.removeChild(event.target);
+					}).error(function() {
+                    alert('Unexpected error');
+                });		
+			 });
+			 $(document).on('click tap', '.js__approve', function(event) {
+				$.getJSON(window.location + '/approve:' + event.target.id)
+					.success(function(response) {
+						alert("Message has been approved!");
+						event.target.parentNode.removeChild(event.target);
+					}).error(function() {
+                    alert('Unexpected error');
+                });		
+			 });
+			 $(document).on('click tap', '.js__approveAll', function(event) {
+				$.getJSON(window.location + '/approveAll:1')
+					.success(function(response) {
+						alert("All messages have been approved!");
+						event.target.parentNode.removeChild(event.target);
+					}).error(function() {
+                    alert('Unexpected error');
+                });		
+			 });
+        });
+    </script>
+
+    {% if grav.twig.guestbookMessages|length %}
+
+        <h3>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h3>
+        <div class="buttons">
+            <button type="button" class="button js__approveAll">
+                Approve all messages
+            </button>
+        </div>
+        <table class="js__messages-container"></table>
+
+       
+            <form>
+                <div class="buttons">
+                    <button id="load" type="button" class="button js__load-more">
+                        Load more
+                    </button>
+                </div>
+            </form>
+
+        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}}</span></p>
+
+    {% endif %}
+
+{% endblock %}
