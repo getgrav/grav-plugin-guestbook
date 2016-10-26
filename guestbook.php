@@ -346,7 +346,7 @@ class GuestbookPlugin extends Plugin
      */
     public function onDataTypeExcludeFromDataManagerPluginHook()
     {
-        $this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'a-guestbook';
+        $this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'guestbook';
     }
 
     protected $route = 'guestbook';
