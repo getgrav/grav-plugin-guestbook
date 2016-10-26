@@ -3,7 +3,7 @@
 {% block content %}
 
     {{ page.content }}
-	{% include "forms/form.html.twig" %}
+    {% include "forms/form.html.twig" %}
     <script>
         $(function() {
             var currentPage = 0;
@@ -13,14 +13,14 @@
                     currentPage = parseInt(response.page);
 
                     response.messages.forEach(function(message) {
-						var st = '<tr>' +
+                        var st = '<tr>' +
                                 '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '<br />                     <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button>                                       ';
-								
-								if (message.moderated != 1) {
-									st = st + '                 <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button>';
-								}
-								st = st + '</div></td></tr>';
-						
+                                
+                                if (message.moderated != 1) {
+                                    st = st + '                 <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button>';
+                                }
+                                st = st + '</div></td></tr>';
+                        
                         $('.js__messages-container').append(st);
                     })
 
@@ -38,36 +38,36 @@
                     alert('Unexpected error');
                 });
             });
-			$( document ).ready(function() {
-				document.getElementById('load').click();
-			});
-			$(document).on('click tap', '.js__delete', function(event) {
-				$.getJSON(window.location + '/delete:' + event.target.id)
-					.success(function(response) {
-						alert("Message has been deleted!");
-						 event.target.parentNode.removeChild(event.target);
-					}).error(function() {
+            $( document ).ready(function() {
+                document.getElementById('load').click();
+            });
+            $(document).on('click tap', '.js__delete', function(event) {
+                $.getJSON(window.location + '/delete:' + event.target.id)
+                    .success(function(response) {
+                        alert("Message has been deleted!");
+                         event.target.parentNode.removeChild(event.target);
+                    }).error(function() {
                     alert('Unexpected error');
-                });		
-			 });
-			 $(document).on('click tap', '.js__approve', function(event) {
-				$.getJSON(window.location + '/approve:' + event.target.id)
-					.success(function(response) {
-						alert("Message has been approved!");
-						event.target.parentNode.removeChild(event.target);
-					}).error(function() {
+                });        
+             });
+             $(document).on('click tap', '.js__approve', function(event) {
+                $.getJSON(window.location + '/approve:' + event.target.id)
+                    .success(function(response) {
+                        alert("Message has been approved!");
+                        event.target.parentNode.removeChild(event.target);
+                    }).error(function() {
                     alert('Unexpected error');
-                });		
-			 });
-			 $(document).on('click tap', '.js__approveAll', function(event) {
-				$.getJSON(window.location + '/approveAll:1')
-					.success(function(response) {
-						alert("All messages have been approved!");
-						event.target.parentNode.removeChild(event.target);
-					}).error(function() {
+                });        
+             });
+             $(document).on('click tap', '.js__approveAll', function(event) {
+                $.getJSON(window.location + '/approveAll:1')
+                    .success(function(response) {
+                        alert("All messages have been approved!");
+                        event.target.parentNode.removeChild(event.target);
+                    }).error(function() {
                     alert('Unexpected error');
-                });		
-			 });
+                });        
+             });
         });
     </script>
 
