@@ -11,8 +11,6 @@ use Grav\Common\User\User;
 use RocketTheme\Toolbox\File\File;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Yaml\Yaml;
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 class GuestbookPlugin extends Plugin
 {
 	/**
@@ -350,7 +348,7 @@ class GuestbookPlugin extends Plugin
 	 */
 	public function onDataTypeExcludeFromDataManagerPluginHook()
 	{
-		$this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'a-guestbook';
+		$this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'guestbook';
 	}
 
 	protected $route = 'guestbook';
