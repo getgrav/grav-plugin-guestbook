@@ -40,19 +40,17 @@
                 .success(function(response) {
                     currentPage = parseInt(response.page);
                     $('.title').html('{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: ' +currentPage);
-                    var str = '                    <tr class="h">                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    </tr>';
+                    var str = '                    <tr class="h">                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    </tr>';
                     $('.js__messages-container').html(str);
                     response.messages.forEach(function(message) {
-                        var st = '<tr class="' + message.uuid + '">' +
-                                '<td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                                if (message.moderated != 1) {
-                                    st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
-                                } else {
-                                    st = st + '<td class="approve"> Already Approved </td>';
-                                }
-                                st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td></tr>';
-    
-                        
+                        var st = '<tr class="' + message.uuid + '">';
+                        if (message.moderated != 1) {
+                            st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+                        } else {
+                            st = st + '<td class="approve"> Already Approved </td>';
+                        }
+                        st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
+                        st = st + '</tr>';
                         $('.js__messages-container').append(st);
                     })
 
@@ -102,19 +100,17 @@
                 .success(function(response) {
                     currentPage = parseInt(response.page);
                     $('.title').html('{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: ' +currentPage);
-                    var str = '                    <tr class="h">                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    </tr>';
+                    var str = '                    <tr class="h">                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    </tr>';
                     $('.js__messages-container').html(str);
                     response.messages.forEach(function(message) {
-                        var st = '<tr class="' + message.uuid + '">' +
-                                '<td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                                if (message.moderated != 1) {
-                                    st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
-                                } else {
-                                    st = st + '<td class="approve"> Already Approved </td>';
-                                }
-                                st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td></tr>';
-    
-                        
+                        var st = '<tr class="' + message.uuid + '">';
+                        if (message.moderated != 1) {
+                            st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+                        } else {
+                            st = st + '<td class="approve"> Already Approved </td>';
+                        }
+                        st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
+                        st = st + '</tr>';
                         $('.js__messages-container').append(st);
                     })
 
