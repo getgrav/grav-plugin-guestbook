@@ -117,11 +117,18 @@ class GuestbookPlugin extends Plugin
             $this->grav['twig']->guestbookMessages = $messages;
         } else {
             $page = $this->grav['uri']->param('page');
-            $messages = $this->getMessages($page - 1);
-            if ($page > 0) {
+            if ($page == "all") {
+                $messages = $this->getMessages("all");
                 echo json_encode($messages);
                 exit();
+            } else {
+                $messages = $this->getMessages($page - 1);
+                if ($page > 0) {
+                    echo json_encode($messages);
+                    exit();
+                }
             }
+
             $del = $this->grav['uri']->param('delete');
             if ($del != false){
                 $this->deleteMessage($del);
@@ -317,7 +324,9 @@ class GuestbookPlugin extends Plugin
         $c = count($messages);
         $page_count = round($c / $itemsPerPage);        
         $totalAvailable = count($messages);
-        $messages = array_slice($messages, $page * $itemsPerPage, $itemsPerPage);
+        if ($page != "all") {
+            $messages = array_slice($messages, $page * $itemsPerPage, $itemsPerPage);
+        }        
         $totalRetrieved = count($messages);
 
         return (object)array(
