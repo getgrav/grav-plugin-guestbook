@@ -39,7 +39,6 @@
                $.getJSON(window.location + '/page:' + /*(currentPage + 1)*/ "all")
                 .success(function(response) {
                     currentPage = parseInt(response.page);
-                    $('.title').html('{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: ' +currentPage);
                     var str = '                    <tr class="h">                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    </tr>';
                     $('.js__messages-container').html(str);
                     response.messages.forEach(function(message) {
@@ -122,7 +121,6 @@
             </button>
         </div>
         <h1>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h1>
-        <h3 class="title">{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: 1</h3>
         <div class="admin-block">
             <div class="buttons">
                 <button type="button" id="all" class="button js__load">
