@@ -35,8 +35,8 @@
     <script>
         $(function() {
             var currentPage = 0;
-            $(document).on('click tap', '.js__load-more', function(event) {
-               $.getJSON(window.location + '/page:' + (currentPage + 1))
+            $(document).on('click tap', '.js__load', function(event) {
+               $.getJSON(window.location + '/page:' + /*(currentPage + 1)*/ "all")
                 .success(function(response) {
                     currentPage = parseInt(response.page);
                     $('.title').html('{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: ' +currentPage);
@@ -44,15 +44,25 @@
                     $('.js__messages-container').html(str);
                     response.messages.forEach(function(message) {
                         var st = '<tr class="' + message.uuid + '">';
-                        if (message.moderated != 1) {
-                            st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+                        if (event.target.id == "all") {
+                            if (message.moderated != 1) {
+                                st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+
+                            } else {
+                                st = st + '<td class="approve"> Already Approved </td>';
+                            }
+                            st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
+                            st = st + '</tr>';
+                            $('.js__messages-container').append(st);
                         } else {
-                            st = st + '<td class="approve"> Already Approved </td>';
+                                if (message.moderated != 1) {
+                                st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+                                st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
+                                st = st + '</tr>';
+                                $('.js__messages-container').append(st);
+                            }
                         }
-                        st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                        st = st + '</tr>';
-                        $('.js__messages-container').append(st);
-                    })
+                    });
 
                     var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
 
@@ -63,29 +73,7 @@
                         $('.totalRetrieved').html($('.totalAvailable').html());
                         
                     }
-                    $('.js__load-more').hide();
-                    var pageb = '<form> <div class="buttons"> ';
-                    
-                    var pagenum = 0;
-                    var buttarr = {};
-                    if (response.totalPages > 10){
-                        if (!(currentPage + 10 > response.totalPages)){
-                            for (i = 0; i < 10; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (currentPage + i) + '" class="button js__change-page">' + (currentPage + i) + '</button>';
-                            }
-                        } else {
-                            var difference = currentPage + 10 - response.totalPages
-                            for (i = 0; i < 10; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (currentPage + i - difference) + '" class="button js__change-page">' + (currentPage + i - difference) + '</button>';
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < response.totalPages; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (i) + '" class="button js__change-page">' + (i) + '</button>';
-                        }
-                    }
-                    pageb = pageb + '</div> </form> ';
-                    $('.page-buttons').html(pageb)
+                    $('.js__load').hide();
                     
                 })
                 .error(function() {
@@ -95,66 +83,6 @@
             $( document ).ready(function() {
                 document.getElementById('load').click();
             });
-            $(document).on('click tap', '.js__change-page', function(event) {
-                           $.getJSON(window.location + '/' + event.target.id)
-                .success(function(response) {
-                    currentPage = parseInt(response.page);
-                    $('.title').html('{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: ' +currentPage);
-                    var str = '                    <tr class="h">                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    </tr>';
-                    $('.js__messages-container').html(str);
-                    response.messages.forEach(function(message) {
-                        var st = '<tr class="' + message.uuid + '">';
-                        if (message.moderated != 1) {
-                            st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
-                        } else {
-                            st = st + '<td class="approve"> Already Approved </td>';
-                        }
-                        st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                        st = st + '</tr>';
-                        $('.js__messages-container').append(st);
-                    })
-
-                    var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
-
-                    $('.totalRetrieved').html(totalRetrieved);
-                    $('.totalAvailable').html(response.totalAvailable);
-
-                    if (totalRetrieved >= response.totalAvailable) {
-                        $('.totalRetrieved').html($('.totalAvailable').html());
-                        
-                    }
-                    $('.js__load-more').hide();
-                    var pageb = '<form> <div class="buttons"> ';
-                    if (currentPage > 1) {
-                        pageb = pageb + '<button type="button" id="page:' + (currentPage - 1) + '" class="button js__change-page">' + (currentPage - 1) + '</button>';
-                    }
-                    if (response.totalPages > 10){
-                        if (!(currentPage + 10 > response.totalPages)){
-                            for (i = 0; i < 10; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (currentPage + i) + '" class="button js__change-page">' + (currentPage + i) + '</button>';
-                            }
-                        } else {
-                            var difference = currentPage + 10 - response.totalPages
-                            for (i = 0; i < 10; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (currentPage + i - difference) + '" class="button js__change-page">' + (currentPage + i - difference) + '</button>';
-                            }
-                            if (currentPage + 11 <= response.totalPages) {
-                                pageb = pageb + '<button type="button" id="page:' + (currentPage + 11) + '" class="button js__change-page">' + (currentPage + 11) + '</button>';
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < response.totalPages; i++) {
-                                pageb = pageb + '<button type="button" id="page:' + (i) + '" class="button js__change-page">' + (i) + '</button>';
-                        }
-                    }
-                    pageb = pageb + '</div> </form> ';
-                    $('.page-buttons').html(pageb)
-                    
-                })
-                .error(function() {
-                    alert('Unexpected error');
-                });
-             });
             $(document).on('click tap', '.js__delete', function(event) {
                 $.getJSON(window.location + '/delete:' + event.target.id)
                     .success(function(response) {
@@ -187,12 +115,18 @@
     </script>
 
     {% if grav.twig.guestbookMessages|length %}
-
+        <div class="button-bar">
+            <button type="button" class="button js__approveAll">
+            <i class="fa fa-check-circle"></i>
+                Approve all messages
+            </button>
+        </div>
+        <h1>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h1>
         <h3 class="title">{{'PLUGIN_GUESTBOOK.MESSAGES'|t}} Page: 1</h3>
         <div class="admin-block">
             <div class="buttons">
-                <button type="button" class="button js__approveAll">
-                    Approve all messages
+                <button type="button" id="all" class="button js__load">
+                    Load All
                 </button>
             </div>
             <center>
@@ -213,7 +147,7 @@
             </table>
             <form>
                 <div class="buttons">
-                    <button id="load" type="button" class="button js__load-more">
+                    <button id="load" type="button" class="button js__load">
                         Load more
                     </button>
                 </div>
