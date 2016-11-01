@@ -1,5 +1,10 @@
 {% extends 'partials/base.html.twig' %}
 
+{% block titlebar %}
+        <h1><i class="fa fa-fw fa-book"></i> {{'PLUGIN_GUESTBOOK.TITLE_ADMIN'|tu}}</h1>
+{% endblock %}
+
+
 {% block content %}
 
     {{ page.content }}
@@ -31,6 +36,7 @@
         }
         .button:active { margin: 0 auto;}
         .nest ul { padding-left: 60px; display: block; list-style: none;}
+        .nest ul em {padding-left: 30px; }
         .nest ul em:before {
           content: "\f0da"; /* FontAwesome Unicode */
           font-family: FontAwesome;
@@ -50,67 +56,37 @@
                $.getJSON(window.location + '/page:' + /*(currentPage + 1)*/ "all")
                 .success(function(response) {
                     currentPage = parseInt(response.page);
-                    if ($(event.target).hasClass("table")) {
-                        var str = '                    <tr class="h">                    <th class="approve">approve</th>                    <th class="delete">delete</th>                    <th class="author">Author</th>                    <th class="message">Message</th>                    <th class="date">Date</th>                    </tr>';
-                        $('.js__messages-container').html(str);
-                    } else {
-                        $('.page-data').html("");
-                    }
+                    $('.page-data').html("");
                     response.messages.forEach(function(message) {
-                        if ($(event.target).hasClass("table")) {
-                            var st = '<tr class="' + message.uuid + '">';
-                            if (event.target.id == "all") {
-                                if (message.moderated != 1) {
-                                    st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
+                        var st = "";
+                        if (event.target.id == "all") {
+                            var st = '<em class="page-item ' +  message.uuid + '"><ul>';
 
-                                } else {
-                                    st = st + '<td class="approve"> Already Approved </td>';
-                                }
-                                st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                                st = st + '</tr>';
-                                $('.js__messages-container').append(st);
-                                $('.types').html("approved and unapproved");
+                            st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
+                            st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
+                            st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';                               
+                            if (message.moderated != 1) {
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                            
+
                             } else {
-                                    if (message.moderated != 1) {
-                                        st = st + '<td class="approve"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form> </td>';
-                                        st = st + '<td class="delete"> <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </td> <td class="author">' + message.author + '</td> <td class="message">' + message.text + '</td> <td class="date">' + message.date + '</td>';
-                                        st = st + '</tr>';
-                                        $('.js__messages-container').append(st);
-                                    }
+                                st = st + '<li><div class="moderate row"><form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>Delete</button> </div> </form> </div></li>';
                             }
-                        } else if ($(event.target).hasClass("nest")) {
-                            var st = "";
-                            if (event.target.id == "all") {
-                                var st = '<em class="page-item ' +  message.uuid + '"><ul>';
 
+                            st = st + '</ul></em><br /> <br />';
+                            $('.types').html("approved and unapproved");
+                        } else {
+                            if (message.moderated != 1) {
+                                st = '<em class="page-item ' +  message.uuid + '"><ul>';
                                 st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
                                 st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
-                                st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';
-                                st = st + '<li><div class="approve row"> ';                                
-                                if (message.moderated != 1) {
-                                    st = st + '<form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form>';
-
-                                } else {
-                                    st = st + ' <strong>Already approved</strong>';
-                                }
-                                st = st + '</div></li>';
-                                st = st + '<li><div class="delete row"> <strong>Delete</strong>: <form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </div></li>';
-                                st = st + '</ul></em><br /> <br />';
-                                $('.types').html("approved and unapproved");
-                            } else {
-                                if (message.moderated != 1) {
-                                    st = '<em class="page-item ' +  message.uuid + '"><ul>';
-                                    st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
-                                    st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
-                                    st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';
-                                    st = st + '<li><div class="approve row"><form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__approve">approve</button> </div> </form></div></li>';
-                                    st = st + '<li><div class="delete row"><form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete">delete</button> </div> </form> </div></li>';
-                                    st = st + '</ul></em><br /> <br />';
-                                }
+                                st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div>';
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                                st = st + '</ul><br /> <br /></em>';
                             }
-                            st = st + '';
-                            $('.page-data').append(st);
                         }
+                        st = st + '';
+                        $('.page-data').append(st);
                     });
 
                     var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
@@ -137,7 +113,7 @@
                     .success(function(response) {
                         alert("Message has been deleted!");
                          event.target.parentNode.removeChild(event.target);
-                         $(event.target.id).hide();
+                         document.getElementsByClassName(event.target.id)[0].remove();
                     }).error(function() {
                     alert('Unexpected error');
                 });        
@@ -166,50 +142,30 @@
     {% if grav.twig.guestbookMessages|length %}
         <div class="button-bar">
             <button type="button" class="button js__approveAll">
-            <i class="fa fa-check-circle"></i>
+                <i class="fa fa-check-circle"></i>
                 Approve all messages
             </button>
-            {% if config.plugins['guestbook'].table %}
-                <button type="button" id="all" class="table button js__load">
-                        Load All
-                </button>
-            {% else %}
-                <button type="button" id="all" class="nest button js__load">
-                        Load All
-                </button>
-            {% endif %}
+            <button type="button" id="all" class="nest button js__load">
+                    <i class="fa fa-download"></i>
+                    Load all
+            </button>
         </div>
         <h1>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h1>
-            <br />
-            <br />
-        <div class="admin-block">
-            {% if config.plugins['guestbook'].table %}
-                <table>
-                    <tbody class="js__messages-container">
-
-                    </tbody>
-                </table>
-                <form>
-                    <div class="buttons">
-                        <button id="load" type="button" class="table button js__load load_init">
-                            Load more
-                        </button>
-                    </div>
-                </form>
-            {% else %}
-                <div class="nest">
+        <div id="admin-dashboard">
+            <div class="dashboard-item admin-block">
+                <div class="nest widget-content">
                     <ul class="page-data">
                     
                     </ul>
                 </div>
                 <form>
                     <div class="buttons">
-                        <button id="load" type="button" class="nest button js__load load_init">
+                        <button id="load" type="button" class="nest button js__load load_init hidden">
                             Load more
                         </button>
                     </div>
                 </form>
-            {% endif %}
+            </div>
         </div>
         <p class="center">Showing <span class="types">unapproved</span> messages</span></p>
     {% else %}
