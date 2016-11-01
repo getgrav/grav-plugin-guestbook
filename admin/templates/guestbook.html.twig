@@ -81,7 +81,6 @@
             $(document).on('click tap', '.js__delete', function(event) {
                 $.getJSON(window.location + '/delete:' + event.target.id)
                     .success(function(response) {
-                        alert("Message has been deleted!");
                          event.target.parentNode.removeChild(event.target);
                          document.getElementsByClassName(event.target.id)[0].remove();
                     }).error(function() {
@@ -91,7 +90,6 @@
              $(document).on('click tap', '.js__approve', function(event) {
                 $.getJSON(window.location + '/approve:' + event.target.id)
                     .success(function(response) {
-                        alert("Message has been approved!");
                         event.target.parentNode.removeChild(event.target);
                     }).error(function() {
                     alert('Unexpected error');
@@ -100,7 +98,6 @@
              $(document).on('click tap', '.js__approveAll', function(event) {
                 $.getJSON(window.location + '/approveAll:1')
                     .success(function(response) {
-                        alert("All messages have been approved!");
                         event.target.parentNode.removeChild(event.target);
                     }).error(function() {
                     alert('Unexpected error');
