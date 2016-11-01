@@ -293,6 +293,10 @@ class GuestbookPlugin extends Plugin
 
     private function getMessages($page = 0)
     {
+        if ($this->grav['config']->get('plugins.guestbook.autoapprove')){
+            $this->approveAll();
+        }
+
         $itemsPerPage = 5;
 
         $lang = $this->grav['language']->getActive();
