@@ -8,45 +8,15 @@
 {% block content %}
 
     {{ page.content }}
+    
     {% include "forms/form.html.twig" %}
-      <style>
-        td.message-actions {
-            flex: 0.1;
-        }
-        .pages-list .row {
-            padding-right: 1rem;
-        }
-        .message-text {
-            line-height: 1.5rem;
-            display: inline-block;
-        }
-        .pages-list .row p.page-route {
-            margin: 0px 0 10px 0px;
-        }
-        th { background: #d9d9d9; }
-        .message     { flex: 3 }
-        .date { flex: 1.5 }
-        .approve { flex: 1.5 }
-        .delete { flex: 1.5 }
-        .author { flex: 1.5 }
+    
+    <style>
         .center {
             margin: 0 auto;
             text-align: center;
             display: block;
         }
-        .button:active { margin: 0 auto;}
-        .nest ul { padding-left: 60px; display: block; list-style: none;}
-        .nest ul em {padding-left: 30px; }
-        .nest ul em:before {
-          content: "\f0da"; /* FontAwesome Unicode */
-          font-family: FontAwesome;
-          display: inline-block;
-          margin-left: -1.3em; /* same as padding-left set on li */
-          width: 1.3em; /* same as padding-left set on li */
-        }
-        
-        .nest ul em ul {display: block; list-style-type: square; }
-        .nest ul em ul li { padding-bottom: 10px;}
     </style>
     
     <script>    
@@ -138,8 +108,9 @@
              });
         });
     </script>
-
+    
     {% if grav.twig.guestbookMessages|length %}
+    
         <div class="button-bar">
             <button type="button" class="button js__approveAll">
                 <i class="fa fa-check-circle"></i>
@@ -150,12 +121,13 @@
                     Load all
             </button>
         </div>
+        
         <h1>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h1>
         <div id="admin-dashboard">
             <div class="dashboard-item admin-block">
                 <div class="nest widget-content">
                     <ul class="page-data">
-                    
+                        
                     </ul>
                 </div>
                 <form>
@@ -167,9 +139,9 @@
                 </form>
             </div>
         </div>
-        <p class="center">Showing <span class="types">unapproved</span> messages</span></p>
+        
+        <p class="center">Showing <span class="types">unapproved</span> messages</p>
     {% else %}
-        <p>No messages yet...</p>
+        <p class="center">No messages yet...</p>
     {% endif %}
-
 {% endblock %}
