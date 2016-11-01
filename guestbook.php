@@ -152,9 +152,10 @@ class GuestbookPlugin extends Plugin
 
         }
     }
+    
     public function isModerated($message) {
         if (!isset($message['moderated'])) {
-            $message['moderated'] = 0;
+            $message['moderated'] = 1;
             return $this->isModerated($message);
         } elseif ($message['moderated'] == 0) {
             return false;
@@ -293,9 +294,6 @@ class GuestbookPlugin extends Plugin
 
     private function getMessages($page = 0)
     {
-        if ($this->grav['config']->get('plugins.guestbook.autoapprove')){
-            $this->approveAll();
-        }
 
         $itemsPerPage = 5;
 
