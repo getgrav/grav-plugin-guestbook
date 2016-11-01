@@ -155,7 +155,7 @@ class GuestbookPlugin extends Plugin
     
     public function isModerated($message) {
         if (!isset($message['moderated'])) {
-            $message['moderated'] = 1;
+            $message['moderated'] = 0;
             return $this->isModerated($message);
         } elseif ($message['moderated'] == 0) {
             return false;
@@ -309,6 +309,7 @@ class GuestbookPlugin extends Plugin
         $messages = Yaml::parse($file->content());
         $checked = [];
         $updated = false;
+        $legacy_check = 0;
         foreach ($messages as $value) {
             if (!isset($value['uuid'])) {
                 $value['uuid'] = $this->gen_uuid();
@@ -316,12 +317,19 @@ class GuestbookPlugin extends Plugin
                     $updated = true;
                 }                
             }
+            if (!isset($value['moderated'])){
+                $legacy_check = $legacy_check + 1;
+            }
             $checked[] = $value;
         }
         if ($updated){
             $messages = $checked;
             $yaml = Yaml::dump($messages);
             file_put_contents($filename, $yaml);
+        }
+        if ($legacy_check == count($messages) && $legacy_check != 0){
+            $this->approveAll();
+            return $this->getMessages($page);
         }
         $c = count($messages);
         $page_count = round($c / $itemsPerPage);        
