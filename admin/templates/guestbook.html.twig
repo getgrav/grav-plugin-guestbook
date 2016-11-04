@@ -1,0 +1,144 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block titlebar %}
+        <h1><i class="fa fa-fw fa-book"></i> {{'PLUGIN_GUESTBOOK.TITLE_ADMIN'|tu}}</h1>
+{% endblock %}
+
+
+{% block content %}
+
+    {{ page.content }}
+    
+    {% include "forms/form.html.twig" %}
+    
+    <style>
+        .center {
+            margin: 0 auto;
+            text-align: center;
+            display: block;
+        }
+    </style>
+    
+    <script>    
+        $(function() {
+            var currentPage = 0;
+            $(document).on('click tap', '.js__load', function(event) {
+               $.getJSON(window.location + '/page:' + /*(currentPage + 1)*/ "all")
+                .success(function(response) {
+                    currentPage = parseInt(response.page);
+                    $('.page-data').html("");
+                    response.messages.forEach(function(message) {
+                        var st = "";
+                        if (event.target.id == "all") {
+                            var st = '<em class="page-item ' +  message.uuid + '"><ul>';
+
+                            st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
+                            st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
+                            st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';                               
+                            if (message.moderated != 1) {
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                            
+
+                            } else {
+                                st = st + '<li><div class="moderate row"><form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>Delete</button> </div> </form> </div></li>';
+                            }
+
+                            st = st + '</ul></em><br /> <br />';
+                            $('.types').html("approved and unapproved");
+                        } else {
+                            if (message.moderated != 1) {
+                                st = '<em class="page-item ' +  message.uuid + '"><ul>';
+                                st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
+                                st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
+                                st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div>';
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                                st = st + '</ul><br /> <br /></em>';
+                            }
+                        }
+                        st = st + '';
+                        $('.page-data').append(st);
+                    });
+
+                    var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
+
+                    $('.totalRetrieved').html(totalRetrieved);
+                    $('.totalAvailable').html(response.totalAvailable);
+
+                    if (totalRetrieved >= response.totalAvailable) {
+                        $('.totalRetrieved').html($('.totalAvailable').html());
+                        
+                    }
+                    $('.load_init').hide();
+                    
+                })
+                .error(function() {
+                    alert('Unexpected error');
+                });
+            });
+            $( document ).ready(function() {
+                document.getElementById('load').click();
+            });
+            $(document).on('click tap', '.js__delete', function(event) {
+                $.getJSON(window.location + '/delete:' + event.target.id)
+                    .success(function(response) {
+                         event.target.parentNode.removeChild(event.target);
+                         document.getElementsByClassName(event.target.id)[0].remove();
+                    }).error(function() {
+                    alert('Unexpected error');
+                });        
+             });
+             $(document).on('click tap', '.js__approve', function(event) {
+                $.getJSON(window.location + '/approve:' + event.target.id)
+                    .success(function(response) {
+                        event.target.parentNode.removeChild(event.target);
+                    }).error(function() {
+                    alert('Unexpected error');
+                });        
+             });
+             $(document).on('click tap', '.js__approveAll', function(event) {
+                $.getJSON(window.location + '/approveAll:1')
+                    .success(function(response) {
+                        event.target.parentNode.removeChild(event.target);
+                    }).error(function() {
+                    alert('Unexpected error');
+                });        
+             });
+        });
+    </script>
+    
+    {% if grav.twig.guestbookMessages|length %}
+    
+        <div class="button-bar">
+            <button type="button" class="button js__approveAll">
+                <i class="fa fa-check-circle"></i>
+                Approve all messages
+            </button>
+            <button type="button" id="all" class="nest button js__load">
+                    <i class="fa fa-download"></i>
+                    Load all
+            </button>
+        </div>
+        
+        <h1>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h1>
+        <div id="admin-dashboard">
+            <div class="dashboard-item admin-block">
+                <div class="nest widget-content">
+                    <ul class="page-data">
+                        
+                    </ul>
+                </div>
+                <form>
+                    <div class="buttons">
+                        <button id="load" type="button" class="nest button js__load load_init hidden">
+                            Load more
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <p class="center">Showing <span class="types">unapproved</span> messages</p>
+    {% else %}
+        <p class="center">No messages yet...</p>
+    {% endif %}
+{% endblock %}
