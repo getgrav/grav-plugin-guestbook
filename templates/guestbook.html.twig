@@ -63,7 +63,7 @@
             </form>
         {% endif %}
 
-        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}} (Note that some may be unmoderated)</span></p>
+        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}} {% if config.plugins.guestbook.moderation %}(Note that some may be unmoderated){% endif %}</span></p>
 
     {% endif %}
 

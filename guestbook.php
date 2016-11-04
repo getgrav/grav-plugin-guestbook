@@ -156,6 +156,11 @@ class GuestbookPlugin extends Plugin
 
     public function isModerated($message)
     {
+        if (!$this->grav['config']->get('plugins.guestbook.moderation')) {
+            $message['moderated'] = 1;
+            return true;
+        }
+
         if (!isset($message['moderated'])) {
             $message['moderated'] = 0;
 
