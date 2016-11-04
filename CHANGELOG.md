@@ -2,7 +2,7 @@
 ## 11/xx/2016
 
 1. [](#new)
-    * Added moderation capabilities [#7](https://github.com/getgrav/grav-plugin-guestbook/issues/7)
+    * Added optional moderation capabilities [#7](https://github.com/getgrav/grav-plugin-guestbook/issues/7)
 
 # v0.4.0
 ## 10/19/2016
