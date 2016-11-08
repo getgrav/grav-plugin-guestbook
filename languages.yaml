@@ -18,7 +18,8 @@ fr:
     MESSAGES: Messages
     WRITTEN_ON: Écrit le
     BY: par
-    TITLE_ADMIN: "Livre d'or Modéré"
+    TITLE_ADMIN: Livre d’or Modéré
+    ENABLE_MODERATION: Messages modérés
 
 it:
   PLUGIN_GUESTBOOK:
