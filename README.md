@@ -70,11 +70,11 @@ form:
           value: Submit
 
     process:
+        - captcha:
+            recatpcha_secret: ej32uej3u2ijeiu32jeiu3jeuj32ui
         - email:
             subject: "[Site Guestbook] {{ form.value.name|e }}"
             body: "{% include 'forms/data.html.twig' %}"
-        - captcha:
-            recatpcha_secret: ej32uej3u2ijeiu32jeiu3jeuj32ui
         - save:
             filename: messages.yaml
             operation: 'add'
