@@ -97,31 +97,28 @@ class GuestbookPlugin extends Plugin
 
     /**
      * Fetch the page messages.
-     *
-     * @param Event $event
      */
     public function fetchMessages()
     {
         $page = $this->grav['uri']->param('page');
         if (!$this->isAdmin()) {
             $messages = $this->getMessages($page);
-            if (!isset($messages->{'messages'})){
+            if (!isset($messages->messages)){
                 if ($page > 0) {
                     echo json_encode($messages);
                     exit();
-                } else {
-                    $this->grav['twig']->guestbookMessages = $messages;
-                    exit();
                 }
+
+                $this->grav['twig']->guestbookMessages = $messages;
 
             } else {
                 $moderated = [];
-                foreach ($messages->{'messages'} as $value) {
+                foreach ($messages->messages as $value) {
                     if ($this->isModerated($value)) {
                         $moderated[] = $value;
                     }
                 }
-                $messages->{'messages'} = $moderated;
+                $messages->messages = $moderated;
                 if ($page > 0) {
                     echo json_encode($messages);
                     exit();
