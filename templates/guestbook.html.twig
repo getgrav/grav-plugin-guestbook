@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {{ page.content }}
+    {{ page.content|raw }}
 
     {% include "forms/form.html.twig" %}
 
@@ -18,7 +18,7 @@
                     response.messages.forEach(function(message) {
                         $('.js__messages-container').append('<tr>' +
                                 '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
-                    })
+                    });
 
                     var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
 

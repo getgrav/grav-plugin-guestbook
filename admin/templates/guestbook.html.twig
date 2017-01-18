@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    {{ page.content }}
+    {{ page.content|raw }}
     
     {% include "forms/form.html.twig" %}
     
@@ -30,8 +30,7 @@
                     response.messages.forEach(function(message) {
                         var st = "";
                         if (event.target.id == "all") {
-                            var st = '<em class="page-item ' +  message.uuid + '"><ul>';
-
+                            st = '<em class="page-item ' +  message.uuid + '"><ul>';
                             st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
                             st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
                             st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';                               
