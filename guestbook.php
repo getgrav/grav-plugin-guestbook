@@ -360,7 +360,7 @@ class GuestbookPlugin extends Plugin
 
         return (object)[
             "messages"       => $messages,
-            "page"           => $page + 1,
+            "page"           => intval($page) + 1,
             "itemsPerPage"   => $itemsPerPage,
             "totalAvailable" => $totalAvailable,
             "totalRetrieved" => $totalRetrieved,
