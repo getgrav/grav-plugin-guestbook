@@ -1,5 +1,5 @@
 # v0.5.0
-## xx/xx/2017
+## 01/24/2017
 
 1. [](#new)
     * Added optional moderation capabilities [#7](https://github.com/getgrav/grav-plugin-guestbook/issues/7)
