@@ -3,21 +3,35 @@ en:
     MESSAGES: Messages
     WRITTEN_ON: Written on
     BY: by
-    
+    TITLE_ADMIN: Moderate Guestbook
+    ENABLE_MODERATION: Moderate Messages
+
 de:
   PLUGIN_GUESTBOOK:
     MESSAGES: Nachrichten
     WRITTEN_ON: Geschrieben an
     BY: von
-    
+    TITLE_ADMIN: Moderate Gästebuch
+
 fr:
   PLUGIN_GUESTBOOK:
     MESSAGES: Messages
     WRITTEN_ON: Écrit le
     BY: par
+    TITLE_ADMIN: Livre d’or Modéré
+    ENABLE_MODERATION: Messages modérés
+
+it:
+  PLUGIN_GUESTBOOK:
+    MESSAGES: Messaggi
+    WRITTEN_ON: Scritto il
+    BY: da
+    TITLE_ADMIN: Moderazione Guestbook
+    ENABLE_MODERATION: Moderazione dei messaggi
+
 ro:
   PLUGIN_GUESTBOOK:
     MESSAGES: 'Mesaje'
     WRITTEN_ON: 'Scrise în data de'
     BY: 'de către'
-    
+    TITLE_ADMIN: 'Cartea de oaspeți moderată'

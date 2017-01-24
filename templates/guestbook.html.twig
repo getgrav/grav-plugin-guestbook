@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {{ page.content }}
+    {{ page.content|raw }}
 
     {% include "forms/form.html.twig" %}
 
@@ -18,7 +18,7 @@
                     response.messages.forEach(function(message) {
                         $('.js__messages-container').append('<tr>' +
                                 '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
-                    })
+                    });
 
                     var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
 
@@ -63,7 +63,7 @@
             </form>
         {% endif %}
 
-        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}}</span></p>
+        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}} {% if config.plugins.guestbook.moderation %}(Note that some may be unmoderated){% endif %}</span></p>
 
     {% endif %}
 

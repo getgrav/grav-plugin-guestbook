@@ -1,5 +1,5 @@
 name: Guestbook
-version: 0.4.0
+version: 0.5.0
 description: Adds a Guestbook functionality to a page
 icon: book
 author:
@@ -37,3 +37,14 @@ form:
       placeholder: messages.yaml
       default: messages.yaml
       help: 'The filename where to store the guestbook messages, under user/data/guestbook'
+
+    moderation:
+      type: toggle
+      label: PLUGIN_GUESTBOOK.ENABLE_MODERATION
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool

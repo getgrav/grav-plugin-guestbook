@@ -1,2 +1,3 @@
 enabled: true
 filename: messages.yaml
+moderation: false
