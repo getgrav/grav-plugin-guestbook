@@ -5,6 +5,7 @@
     * Added optional moderation capabilities [#7](https://github.com/getgrav/grav-plugin-guestbook/issues/7)
 1. [](#bugfix)
     * Add support for Twig `Autoescape variables` mode
+    * Fixed PHP 7.1 issue in moderation
 
 # v0.4.0
 ## 10/19/2016
