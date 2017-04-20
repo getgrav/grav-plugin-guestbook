@@ -103,29 +103,11 @@ class GuestbookPlugin extends Plugin
         $page = $this->grav['uri']->param('page');
         if (!$this->isAdmin()) {
             $messages = $this->getMessages($page);
-            if (!isset($messages->messages)){
                 if ($page > 0) {
                     echo json_encode($messages);
                     exit();
                 }
-
                 $this->grav['twig']->guestbookMessages = $messages;
-
-            } else {
-                $moderated = [];
-                foreach ($messages->messages as $value) {
-                    if ($this->isModerated($value)) {
-                        $moderated[] = $value;
-                    }
-                }
-                $messages->messages = $moderated;
-                if ($page > 0) {
-                    echo json_encode($messages);
-                    exit();
-                }
-
-                $this->grav['twig']->guestbookMessages = $messages;
-            }
         } else {
             if ($page == "all") {
                 $messages = $this->getMessages("all");
@@ -349,6 +331,15 @@ class GuestbookPlugin extends Plugin
             $this->approveAll();
 
             return $this->getMessages($page);
+        }
+        if (isset($messages)) {
+            $moderated = [];
+            foreach ($messages as $value) {
+                if ($this->isModerated($value)) {
+                   $moderated[] = $value;
+                }
+            }
+            $messages = $moderated;
         }
         $c = count($messages);
         $page_count = round($c / $itemsPerPage);
