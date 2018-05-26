@@ -205,7 +205,7 @@ class GuestbookPlugin extends Plugin
 
     private function approveAll()
     {
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
+        $filename = DATA_DIR . $this->grav['page']->header()->form['name'] . '/' . $this->grav['config']->get('plugins.guestbook.filename');
         $file = File::instance($filename);
 
         if (!$file->content()) {
@@ -234,12 +234,13 @@ class GuestbookPlugin extends Plugin
             $messages = $checked;
             $yaml = Yaml::dump($messages);
             file_put_contents($filename, $yaml);
+            $file->load();
         }
     }
 
     private function approveMessage($uid)
     {
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
+        $filename = DATA_DIR . $this->grav['page']->header()->form['name'] . '/' . $this->grav['config']->get('plugins.guestbook.filename');
         $file = File::instance($filename);
 
         if (!$file->content()) {
@@ -276,7 +277,7 @@ class GuestbookPlugin extends Plugin
 
     private function deleteMessage($uid)
     {
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
+        $filename = DATA_DIR . $this->grav['page']->header()->form['name'] . '/' . $this->grav['config']->get('plugins.guestbook.filename');
         $file = File::instance($filename);
 
         if (!$file->content()) {
@@ -316,7 +317,7 @@ class GuestbookPlugin extends Plugin
         $itemsPerPage = 5;
 
         $lang = $this->grav['language']->getActive();
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
+        $filename = DATA_DIR . $this->grav['page']->header()->form['name'] . '/' . $this->grav['config']->get('plugins.guestbook.filename');
         $file = File::instance($filename);
 
         if (!$file->content()) {
