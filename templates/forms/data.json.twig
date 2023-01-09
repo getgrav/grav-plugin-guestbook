@@ -1,0 +1,12 @@
+{% macro render_field(form, fields) %}
+{% set array = [ ] %}
+{% for index, field in fields %}
+{% set key = field.name %}
+{% set value = form.value(field.name) %}
+{% set array = array|merge({ (key): value}) %}
+{% endfor %}
+{% set array = array|merge({ "moderated": 0}) %}
+{% set code = random_string(15)|md5 %}
+{{ { (code): array }|json_encode|raw }}
+{% endmacro %}
+{{ _self.render_field(form, form.fields) }}
