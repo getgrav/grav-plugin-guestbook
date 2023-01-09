@@ -14,7 +14,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class GuestbookPlugin extends Plugin
 {
-    protected $route = 'guestbook';
+    public $features = [
+        'blueprints' => 1000,
+    ];
 
     /**
      * @return array
@@ -23,10 +25,8 @@ class GuestbookPlugin extends Plugin
     {
         return [
             'onPluginsInitialized'                       => ['onPluginsInitialized', 0],
-            'onFormProcessed'                            => ['onFormProcessed', 10],
-            'onDataTypeExcludeFromDataManagerPluginHook' => ['onDataTypeExcludeFromDataManagerPluginHook', 0],
             'onGetPageTemplates'                         => ['onGetPageTemplates', 0],
-            'onAdminMenu'                                => ['onAdminMenu', 0]
+            'onFormProcessed'                            => ['onFormProcessed', 10]
         ];
     }
 
@@ -34,17 +34,10 @@ class GuestbookPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        if (!$this->isAdmin()) {
-            $this->enable([
-                'onPageInitialized'   => ['onPageInitialized', 0],
-                'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0]
-            ]);
-        } else {
-            $this->enable([
-                'onPageInitialized'   => ['onPageInitialized', 0],
-                'onTwigTemplatePaths' => ['onTwigAdminTemplatePaths', 0]
-            ]);
-        }
+        $this->enable([
+            'onPageInitialized'   => ['onPageInitialized', 0],
+            'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0]
+        ]);
     }
 
     /**
@@ -59,15 +52,6 @@ class GuestbookPlugin extends Plugin
             //Call this here to get the messages on the page load
             $this->fetchMessages();
         }
-    }
-
-    public function onAdminPageInitialized()
-    {
-        /** @var Page $page */
-        $page = $this->grav['page'];
-
-        //Call this here to get the messages on the page load
-        $this->fetchMessages();
     }
 
     /**
@@ -101,62 +85,28 @@ class GuestbookPlugin extends Plugin
     public function fetchMessages()
     {
         $page = $this->grav['uri']->param('page');
-        if (!$this->isAdmin()) {
-            $messages = $this->getMessages($page);
-            if (!isset($messages->messages)){
-                if ($page > 0) {
-                    echo json_encode($messages);
-                    exit();
-                }
-
-                $this->grav['twig']->guestbookMessages = $messages;
-
-            } else {
-                $moderated = [];
-                foreach ($messages->messages as $value) {
-                    if ($this->isModerated($value)) {
-                        $moderated[] = $value;
-                    }
-                }
-                $messages->messages = $moderated;
-                if ($page > 0) {
-                    echo json_encode($messages);
-                    exit();
-                }
-
-                $this->grav['twig']->guestbookMessages = $messages;
-            }
-        } else {
-            if ($page == "all") {
-                $messages = $this->getMessages("all");
+        $messages = $this->getMessages($page);
+        if (!isset($messages->messages)){
+            if ($page > 0) {
                 echo json_encode($messages);
                 exit();
-            } else {
-                $messages = $this->getMessages($page - 1);
-                if ($page > 0) {
-                    echo json_encode($messages);
-                    exit();
-                }
             }
 
-            $del = $this->grav['uri']->param('delete');
-            if ($del != false) {
-                $this->deleteMessage($del);
-                echo json_encode($del);
+            $this->grav['twig']->guestbookMessages = $messages;
+
+        } else {
+            $moderated = [];
+            foreach ($messages->messages as $value) {
+                if ($this->isModerated($value)) {
+                    $moderated[] = $value;
+                }
+            }
+            $messages->messages = $moderated;
+            if ($page > 0) {
+                echo json_encode($messages);
                 exit();
             }
-            $app = $this->grav['uri']->param('approve');
-            if ($app != false) {
-                $this->approveMessage($app);
-                echo json_encode($app);
-                exit();
-            }
-            $appa = $this->grav['uri']->param('approveAll');
-            if ($appa != false) {
-                $this->approveAll();
-                echo json_encode($appa);
-                exit();
-            }
+
             $this->grav['twig']->guestbookMessages = $messages;
         }
     }
@@ -237,80 +187,6 @@ class GuestbookPlugin extends Plugin
         }
     }
 
-    private function approveMessage($uid)
-    {
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
-        $file = File::instance($filename);
-
-        if (!$file->content()) {
-            //Item not found
-            return;
-        }
-
-        $messages = Yaml::parse($file->content());
-        $checked = [];
-        $updated = false;
-        foreach ($messages as $value) {
-            if (!isset($value['uuid'])) {
-                $value['uuid'] = $this->gen_uuid();
-                if (!$updated) {
-                    $updated = true;
-                }
-
-            }
-            if ($value['uuid'] == $uid) {
-                if (!$updated) {
-                    $updated = true;
-                }
-                $value["moderated"] = 1;
-            }
-            $checked[] = $value;
-
-        }
-        if ($updated) {
-            $messages = $checked;
-            $yaml = Yaml::dump($messages);
-            file_put_contents($filename, $yaml);
-        }
-    }
-
-    private function deleteMessage($uid)
-    {
-        $filename = DATA_DIR . 'guestbook/' . $this->grav['config']->get('plugins.guestbook.filename');
-        $file = File::instance($filename);
-
-        if (!$file->content()) {
-            //Item not found
-            return;
-        }
-
-        $messages = Yaml::parse($file->content());
-        $checked = [];
-        $updated = false;
-        foreach ($messages as $value) {
-            if (!isset($value['uuid'])) {
-                $value['uuid'] = $this->gen_uuid();
-                if (!$updated) {
-                    $updated = true;
-                }
-
-            }
-            if ($value['uuid'] != $uid) {
-                $checked[] = $value;
-            } else {
-                if (!$updated) {
-                    $updated = true;
-                }
-            }
-
-        }
-        if ($updated) {
-            $messages = $checked;
-            $yaml = Yaml::dump($messages);
-            file_put_contents($filename, $yaml);
-        }
-    }
-
     private function getMessages($page = 0)
     {
         $itemsPerPage = 5;
@@ -374,28 +250,5 @@ class GuestbookPlugin extends Plugin
     public function onTwigTemplatePaths()
     {
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
-    }
-
-    public function onTwigAdminTemplatePaths()
-    {
-        $this->grav['twig']->twig_paths[] = __DIR__ . '/admin/templates';
-    }
-
-    /**
-     * Exclude comments from the Data Manager plugin
-     */
-    public function onDataTypeExcludeFromDataManagerPluginHook()
-    {
-        $this->grav['admin']->dataTypesExcludedFromDataManagerPlugin[] = 'guestbook';
-    }
-
-    /**
-     * Add navigation item to the admin plugin
-     */
-    public function onAdminMenu()
-    {
-        if ($this->grav['config']->get('plugins.guestbook.moderation')) {
-            $this->grav['twig']->plugins_hooked_nav['Guestbook'] = ['route' => $this->route, 'icon' => 'fa-book'];
-        }
     }
 }
