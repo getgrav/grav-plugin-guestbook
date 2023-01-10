@@ -1,13 +1,8 @@
 <?php
 namespace Grav\Plugin;
 
-use Grav\Common\GPM\GPM;
-use Grav\Common\Grav;
-use Grav\Common\Page\Page;
-use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
-use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
-use Grav\Common\User\User;
+use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\File\File;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Yaml\Yaml;
@@ -49,9 +44,17 @@ class GuestbookPlugin extends Plugin
         $page = $this->grav['page'];
 
         if ($page->template() == 'guestbook') {
-            //Call this here to get the messages on the page load
+            // Call this here to get the messages on the page load
             $this->fetchMessages();
         }
+    }
+
+    /**
+     * Add templates directory to twig lookup paths.
+     */
+    public function onTwigTemplatePaths()
+    {
+        $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
     }
 
     /**
@@ -73,6 +76,37 @@ class GuestbookPlugin extends Plugin
     {
         if (!$this->active) {
             return;
+        }
+
+        /** @var Form $form */
+        $form = $event['form'];
+        $action = $event['action'];
+        $params = $event['params'];
+
+        switch ($action) {
+            case 'jsonAdd':
+                $operation = $params['operation'] ?? 'create';
+
+                if ($operation === 'add') {
+                    /** @var Flex */
+                    $flex = $this->grav['flex'];
+                    /** @var FlexDirectory */
+                    $dir = $flex->getDirectory('guestbook');
+
+                    /** @var FlexObjectInterface */
+                    $object = $dir->createObject(
+                    [
+                        'author' => $form->data['author'],
+                        'text' => $form->data['message'],
+                        'email' => $form->data['email'],
+                        'date' => $form->data['date'],
+                        'moderated' => 0,
+                    ],
+                    );
+                    $object->create();
+                    $dir->clearCache();
+                }
+                break;
         }
 
         //Call this here to get the messages updated after the form is processed
@@ -159,7 +193,7 @@ class GuestbookPlugin extends Plugin
         $file = File::instance($filename);
 
         if (!$file->content()) {
-            //Item not found
+            // Item not found
             return;
         }
 
@@ -242,13 +276,5 @@ class GuestbookPlugin extends Plugin
             "totalRetrieved" => $totalRetrieved,
             "totalPages"     => $page_count
         ];
-    }
-
-    /**
-     * Add templates directory to twig lookup paths.
-     */
-    public function onTwigTemplatePaths()
-    {
-        $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
     }
 }
