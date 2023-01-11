@@ -96,7 +96,7 @@ class GuestbookPlugin extends Plugin
                     /** @var FlexObjectInterface */
                     $object = $dir->createObject([
                         'author' => $form->data['author'],
-                        'text' => $form->data['message'],
+                        'text' => $form->data['text'],
                         'email' => $form->data['email'],
                         'date' => $form->data['date'],
                         'uuid' => $this->gen_uuid(),
