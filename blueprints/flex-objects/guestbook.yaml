@@ -117,7 +117,7 @@ form:
       type: toggle
       label: Moderated
       highlight: 1
-      default: 1
+      default: 0
       options:
         1: PLUGIN_ADMIN.YES
         0: PLUGIN_ADMIN.NO

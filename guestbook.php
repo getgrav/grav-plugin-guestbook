@@ -84,7 +84,7 @@ class GuestbookPlugin extends Plugin
         $params = $event['params'];
 
         switch ($action) {
-            case 'jsonAdd':
+            case 'jsonAddGuestbookEntry':
                 $operation = $params['operation'] ?? 'create';
 
                 if ($operation === 'add') {
@@ -94,17 +94,15 @@ class GuestbookPlugin extends Plugin
                     $dir = $flex->getDirectory('guestbook');
 
                     /** @var FlexObjectInterface */
-                    $object = $dir->createObject(
-                    [
+                    $object = $dir->createObject([
                         'author' => $form->data['author'],
                         'text' => $form->data['message'],
                         'email' => $form->data['email'],
                         'date' => $form->data['date'],
+                        'uuid' => $this->gen_uuid(),
                         'moderated' => 0,
-                    ],
-                    );
-                    $object->create();
-                    $dir->clearCache();
+                    ]);
+                    $object->save();
                 }
                 break;
         }
