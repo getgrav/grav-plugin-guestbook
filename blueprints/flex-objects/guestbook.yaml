@@ -97,9 +97,17 @@ config:
       options:
         formatter:
           # File formatter class, in this case the file is stored in markdown
-          class: 'Grav\Framework\File\Formatter\JsonFormatter'
+#          class: 'Grav\Framework\File\Formatter\JsonFormatter'
+          class: 'Grav\Framework\File\Formatter\YamlFormatter'
+          options:
+            file_extension: '.yaml'
+            inline: 5           # Save with up to 4 expanded levels
+            indent: 2           # Indent with 2 spaces
+            native: true        # Use native YAML decoder if available
+            compat: true        # If YAML cannot be decoded, use compatibility mode (SLOW)
         # JSON file where all the objects will be stored
-        folder: user-data://flex-objects/guestbook.json
+#        folder: user-data://flex-objects/guestbook.json
+        folder: user-data://flex-objects/guestbook.yaml
     search:
       # Search options
       options:
