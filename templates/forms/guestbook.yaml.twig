@@ -2,7 +2,7 @@
 {%- macro render_field(form, fields) -%}
 
 {# prepare array #}
-{%- set array = {"moderated": 0} -%}
+{%- set array = {"moderated": false} -%}
 
 {# loop through data and fill array #}
 {%- for index, field in fields -%}
@@ -24,4 +24,4 @@
 {%- endmacro -%}
 
 {# call macro #}
-{{ _self.render_field(form, form.fields) }}
+{{- _self.render_field(form, form.fields) -}}
