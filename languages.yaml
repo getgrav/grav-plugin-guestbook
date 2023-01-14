@@ -3,15 +3,15 @@ en:
     MESSAGES: Messages
     WRITTEN_ON: Written on
     BY: by
-    TITLE_ADMIN: Moderate Guestbook
-    ENABLE_MODERATION: Moderate Messages
+    TITLE_ADMIN: Moderate guestbook
+    ENABLE_MODERATION: Moderate messages
 
 de:
   PLUGIN_GUESTBOOK:
     MESSAGES: Nachrichten
-    WRITTEN_ON: Geschrieben an
+    WRITTEN_ON: Geschrieben am
     BY: von
-    TITLE_ADMIN: Moderate Gästebuch
+    TITLE_ADMIN: Gästebuch moderieren
 
 fr:
   PLUGIN_GUESTBOOK:
