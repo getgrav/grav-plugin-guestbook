@@ -30,14 +30,6 @@ form:
       validate:
         type: bool
 
-    filename:
-      type: text
-      label: Filename
-      size: medium
-      placeholder: messages.yaml
-      default: messages.yaml
-      help: 'The filename where to store the guestbook messages, under user/data/guestbook'
-
     moderation:
       type: toggle
       label: PLUGIN_GUESTBOOK.ENABLE_MODERATION
