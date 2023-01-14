@@ -33,6 +33,7 @@ form:
     moderation:
       type: toggle
       label: PLUGIN_GUESTBOOK.ENABLE_MODERATION
+      help: PLUGIN_GUESTBOOK.ENABLE_MODERATION_HELP
       highlight: 1
       default: 0
       options:
