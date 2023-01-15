@@ -1,8 +1,11 @@
 {# define macro #}
-{%- macro render_field(form, fields) -%}
+{%- macro render_field(form, fields, scope, context) -%}
+
+{# get moderation setting #}
+{%- set moderation_enabled = context.config.plugins.guestbook.moderation -%}
 
 {# prepare array #}
-{%- set array = {"moderated": false} -%}
+{%- set array = {"moderated": not moderation_enabled} -%}
 
 {# loop through data and fill array #}
 {%- for index, field in fields -%}
@@ -24,4 +27,4 @@
 {%- endmacro -%}
 
 {# call macro #}
-{{- _self.render_field(form, form.fields) -}}
+{{- _self.render_field(form, form.fields, '', _context) -}}
