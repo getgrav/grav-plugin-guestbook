@@ -1,19 +1,20 @@
 name: Guestbook
-version: 0.5.0
-description: Adds a Guestbook functionality to a page
+version: 0.6.0
+description: Guestbook functionality based on flex-objects
+slug: guestbook
+type: plugin
 icon: book
 author:
-  name: Team Grav
-  email: devs@getgrav.org
-  url: http://getgrav.org
-homepage: https://github.com/getgrav/grav-plugin-guestbook
-keywords: guestbook, plugin
-bugs: https://github.com/getgrav/grav-plugin-guestbook/issues
-docs: https://github.com/getgrav/grav-plugin-guestbook/blob/develop/README.md
+  name: pikim
+  email: pikim@web.de
+homepage: https://github.com/pikim/grav-plugin-guestbook
+keywords: grav, plugin, guestbook
+bugs: https://github.com/pikim/grav-plugin-guestbook/issues
+docs: https://github.com/pikim/grav-plugin-guestbook/blob/develop/README.md
 license: MIT
 
 dependencies:
-  - { name: grav, version: '>=1.7.8' }
+  - { name: grav, version: '>=1.6.0' }
   - form
   - email
 
