@@ -30,6 +30,7 @@ class GuestbookPlugin extends Plugin
         return [
             'onPluginsInitialized'         => [['onPluginsInitialized', 0]],
             FlexRegisterEvent::class       => [['onRegisterFlex', 0]],
+            'onFormProcessed'              => [['onFormProcessed', 0]],
         ];
     }
 
@@ -67,5 +68,45 @@ class GuestbookPlugin extends Plugin
             'guestbook',
             'blueprints://flex-objects/guestbook.yaml'
         );
+    }
+
+    /**
+     * Handle form processing instructions.
+     *
+     * @param $event
+     */
+    public function onFormProcessed($event): void
+    {
+        if (!$this->active) {
+            return;
+        }
+
+        /** @var Form $form */
+        $form = $event['form'];
+        $action = $event['action'];
+        $params = $event['params'];
+
+        switch ($action) {
+            case 'jsonAddGuestbookEntry':
+                $operation = $params['operation'] ?? 'add';
+
+                if ($operation === 'add') {
+                    /** @var Flex */
+                    $flex = $this->grav['flex'];
+                    /** @var FlexDirectory */
+                    $dir = $flex->getDirectory('guestbook');
+
+                    /** @var FlexObjectInterface */
+                    $object = $dir->createObject([
+                        'author' => $form->data['author'],
+                        'email' => $form->data['email'],
+                        'date' => $form->data['date'],
+                        'text' => $form->data['text'],
+                        'moderated' => 0,
+                    ]);
+                    $object->save();
+                }
+                break;
+        }
     }
 }
