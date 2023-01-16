@@ -130,6 +130,10 @@ By default, in the `user/data/flex-objects/guestbook.yaml` folder. This can be c
 
 You can view and accept messages through the `Guestbook` section in the Admin Plugin.
 
+## Multiple guestbooks
+
+If you need more than one guestbook you'll have to copy `user/plugins/guestbook/blueprints/flex-objects/guestbook.yaml`, store it under a different name in the same folder and adjust its content. You'll also have to adjust the `filename: ../flex-objects/guestbook.yaml` in the save action of your page file. Storing multiple guestbooks with json file format isn't supported, yet. See list of todos below.
+
 ## Credits
 
 Thanks to the authors of Grav CMS and the inital guestbook plugin.
@@ -137,5 +141,6 @@ Thanks to the authors of Grav CMS and the inital guestbook plugin.
 ## To Do
 
 - [ ] add message pagination using the pagination plugin
+- [ ] add support for multiple guestbooks with json file format by modifying `onFormProcessed`
 - [ ] add custom classes if necessary. See and revert commit `d756e7cf5c015102c787b8b46667ee0521a7c2f0`
 - [ ] add flex-objects layout templates if necessary. Just storing them in `user/plugins/guestbook/templates/flex/guestbook/collection/default.html.twig` and `user/plugins/guestbook/templates/flex/guestbook/object/default.html.twig` doesn't work and storing them to `user/plugins/flex-objects/templates/flex/guestbook/...` is very ugly
