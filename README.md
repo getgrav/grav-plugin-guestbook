@@ -136,4 +136,6 @@ Thanks to the authors of Grav CMS and the inital guestbook plugin.
 
 ## To Do
 
-- [ ] tbd
+- [ ] add message pagination using the pagination plugin
+- [ ] add custom classes if necessary. See and revert commit `d756e7cf5c015102c787b8b46667ee0521a7c2f0`
+- [ ] add flex-objects layout templates if necessary. Just storing them in `user/plugins/guestbook/templates/flex/guestbook/collection/default.html.twig` and `user/plugins/guestbook/templates/flex/guestbook/object/default.html.twig` doesn't work
