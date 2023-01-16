@@ -87,9 +87,9 @@ config:
     # Data Configuration
     data:
         # Object class to be used, allowing custom methods for the object
-        object: 'Grav\Plugin\Guestbook\Flex\Types\Guestbook\GuestbookObject'
+        object: 'Grav\Common\Flex\Types\Generic\GenericObject'
         # Collection class to be used, allowing custom methods for the collections
-        collection: 'Grav\Plugin\Guestbook\Flex\Types\Guestbook\GuestbookCollection'
+        collection: 'Grav\Common\Flex\Types\Generic\GenericCollection'
         # Index class to be used, works as a quick database-like lookup index
         index: 'Grav\Common\Flex\Types\Generic\GenericIndex'
         storage:
