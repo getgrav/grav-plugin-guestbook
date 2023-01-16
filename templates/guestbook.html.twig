@@ -12,6 +12,7 @@
 
         <table class="messages-container">
             {% for message in messages|reverse %}
+            {% if (message.moderated and config.plugins.guestbook.moderation) or (not config.plugins.guestbook.moderation) %}
             <tr>
                 <td>
                     {{message.text|e}}
@@ -19,6 +20,7 @@
                     {{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} {{message.date|e}} {{'PLUGIN_GUESTBOOK.BY'|t}} {{message.author|e}}
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
         </table>
     {% endif %}
