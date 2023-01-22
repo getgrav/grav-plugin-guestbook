@@ -1,3 +1,9 @@
+# v0.6.0
+## 01/15/2023
+
+1. [](#new)
+    * Moved to flex-objects. NOTE: although it still uses yaml file(s) for data storage, it's necessary to revise existing guestbook messages files.
+
 # v0.5.0
 ## 01/24/2017
 

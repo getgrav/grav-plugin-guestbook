@@ -1,0 +1,27 @@
+{# define macro #}
+{%- macro render_field(form, fields, scope, context) -%}
+
+{# prepare array #}
+{%- set array = {"moderated": false} -%}
+
+{# loop through data and fill array #}
+{%- for index, field in fields -%}
+{%- set key = field.name -%}
+{%- set value = form.value(field.name) -%}
+{%- set array = array|merge({(key): value}) -%}
+{%- endfor -%}
+
+{# random code for this entry #}
+{%- set code = random_string(15)|md5 -%}
+
+{# prepare final array #}
+{%- set data = {(code): array} -%}
+
+{# output data #}
+{{- data|yaml_encode|raw -}}
+
+{# end of macro #}
+{%- endmacro -%}
+
+{# call macro #}
+{{- _self.render_field(form, form.fields, '', _context) -}}

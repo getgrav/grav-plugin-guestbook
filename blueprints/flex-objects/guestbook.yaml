@@ -1,0 +1,154 @@
+title: 'Guestbook'
+description: 'Simple guestbook message handling.'
+type: flex-objects
+
+# Flex Configuration
+config:
+    # Administration Configuration
+    admin:
+        # Admin router (optional)
+        router:
+            path: '/guestbook'
+
+        # Admin menu (optional)
+        menu:
+            list:
+                route: '/guestbook'
+                title: 'Guestbook'
+                icon: fa-book
+                # Authorization to collection admin
+                authorize: ['admin.guestbook.list', 'admin.super']
+                # Priority -10 .. 10 (highest goes up)
+                priority: 2
+
+        # Admin template type / folder
+        template: default
+
+        # Permissions
+        permissions:
+            # Primary permissions
+            admin.guestbook:
+                type: crudpl
+                label: 'Guestbook'
+
+        # List view
+        list:
+            title: name
+            fields:
+                moderated:
+                    field:
+                        type: toggle
+                        label: Moderated
+                    width: 8
+                author:
+                    link: edit
+                email:
+                    link: edit
+                date:
+                text:
+
+        # Edit View
+        edit:
+            title:
+#                template: '{{ object.author ?? ''Author'' }}'
+                template: ''
+
+        # Preview View
+        preview:
+            enabled: false
+            route:
+            #template: '/plugins/flex-objects/directory:guestbook'
+
+        # Data Export
+        export:
+            enabled: true
+            method: 'jsonSerialize'
+            formatter:
+                class: 'Grav\Framework\File\Formatter\YamlFormatter'
+            filename: 'guestbook'
+
+    # Site Configuration
+    site:
+        templates:
+            collection:
+                # Lookup for the template layout files for collections of objects
+                paths:
+                    - 'flex/{TYPE}/collection/{LAYOUT}{EXT}'
+            object:
+                # Lookup for the template layout files for objects
+                paths:
+                    - 'flex/{TYPE}/object/{LAYOUT}{EXT}'
+            defaults:
+                # Default template {TYPE}; overridden by filename of this blueprint if template folder exists
+                type: 'guestbook'
+                # Default template {LAYOUT}; can be overridden in render calls (usually Twig in templates)
+                layout: default
+
+    # Data Configuration
+    data:
+        # Object class to be used, allowing custom methods for the object
+        object: 'Grav\Common\Flex\Types\Generic\GenericObject'
+        # Collection class to be used, allowing custom methods for the collections
+        collection: 'Grav\Common\Flex\Types\Generic\GenericCollection'
+        # Index class to be used, works as a quick database-like lookup index
+        index: 'Grav\Common\Flex\Types\Generic\GenericIndex'
+        storage:
+            # Storage class, use single file storage (does not support images and assets)
+            class: 'Grav\Framework\Flex\Storage\SimpleStorage'
+            options:
+                formatter:
+                    # File formatter class, in this case the file is stored in markdown
+#                    class: 'Grav\Framework\File\Formatter\JsonFormatter'
+                    class: 'Grav\Framework\File\Formatter\YamlFormatter'
+                    options:
+                        file_extension: '.yaml'
+                        inline: 5           # Save with up to 4 expanded levels
+                        indent: 2           # Indent with 2 spaces
+                        native: true        # Use native YAML decoder if available
+                        compat: true        # If YAML cannot be decoded, use compatibility mode (SLOW)
+                # JSON file where all the objects will be stored
+#                folder: user-data://flex-objects/guestbook.json
+                folder: user-data://flex-objects/guestbook.yaml
+        search:
+            # Search options
+            options:
+                contains: 1
+            # Fields to be searched
+            fields:
+                - author
+                - email
+
+form:
+    validation: loose
+    fields:
+        moderated:
+            type: toggle
+            label: Moderated
+            highlight: 1
+            default: 0
+            options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+            validate:
+                type: bool
+                required: true
+        author:
+            type: text
+            label: Author Name
+            validate:
+                required: true
+        email:
+            type: email
+            label: Email Address
+            validate:
+                required: true
+        date:
+            type: datetime
+            label: Date & Time
+            validate:
+                required: true
+        text:
+            type: textarea
+            label: Message
+            validate:
+                required: true

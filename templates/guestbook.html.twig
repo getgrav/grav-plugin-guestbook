@@ -1,48 +1,18 @@
 {% extends 'default.html.twig' %}
 
 {% block content %}
-
     {{ page.content|raw }}
 
     {% include "forms/form.html.twig" %}
 
-    <script>
-        $(function() {
-            var currentPage = 0;
+    {% set messages = grav.get('flex').collection('guestbook') %}
 
-            $(document).on('click tap', '.js__load-more', function(event) {
-               $.getJSON(window.location + '/page:' + (currentPage + 1))
-                .success(function(response) {
-                    currentPage = parseInt(response.page);
-
-                    response.messages.forEach(function(message) {
-                        $('.js__messages-container').append('<tr>' +
-                                '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
-                    });
-
-                    var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
-
-                    $('.totalRetrieved').html(totalRetrieved);
-                    $('.totalAvailable').html(response.totalAvailable);
-
-                    if (totalRetrieved >= response.totalAvailable) {
-                        $('.totalRetrieved').html($('.totalAvailable').html());
-                        $('.js__load-more').hide();
-                    }
-                })
-                .error(function() {
-                    alert('Unexpected error');
-                });
-            });
-        });
-    </script>
-
-    {% if grav.twig.guestbookMessages|length %}
-
+    {% if messages|length %}
         <h3>{{'PLUGIN_GUESTBOOK.MESSAGES'|t}}</h3>
 
-        <table class="js__messages-container">
-            {% for message in grav.twig.guestbookMessages.messages %}
+        <table class="messages-container">
+            {% for message in messages|reverse %}
+            {% if (message.moderated and config.plugins.guestbook.moderation) or (not config.plugins.guestbook.moderation) %}
             <tr>
                 <td>
                     {{message.text|e}}
@@ -50,21 +20,8 @@
                     {{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} {{message.date|e}} {{'PLUGIN_GUESTBOOK.BY'|t}} {{message.author|e}}
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
         </table>
-
-        {% if grav.twig.guestbookMessages.totalRetrieved < grav.twig.guestbookMessages.totalAvailable %}
-            <form>
-                <div class="buttons">
-                    <button type="button" class="button js__load-more">
-                        Load more
-                    </button>
-                </div>
-            </form>
-        {% endif %}
-
-        <p class="center">Showing <span class="totalRetrieved">{{grav.twig.guestbookMessages.totalRetrieved}}</span> messages of <span class="totalAvailable">{{grav.twig.guestbookMessages.totalAvailable}} {% if config.plugins.guestbook.moderation %}(Note that some may be unmoderated){% endif %}</span></p>
-
     {% endif %}
-
 {% endblock %}
