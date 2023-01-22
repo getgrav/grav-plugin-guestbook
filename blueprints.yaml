@@ -5,16 +5,17 @@ slug: guestbook
 type: plugin
 icon: book
 author:
-  name: pikim
-  email: pikim@web.de
-homepage: https://github.com/pikim/grav-plugin-guestbook
+  name: Team Grav
+  email: devs@getgrav.org
+  url: http://getgrav.org
+homepage: https://github.com/getgrav/grav-plugin-guestbook
 keywords: grav, plugin, guestbook
-bugs: https://github.com/pikim/grav-plugin-guestbook/issues
-docs: https://github.com/pikim/grav-plugin-guestbook/blob/develop/README.md
+bugs: https://github.com/getgrav/grav-plugin-guestbook/issues
+docs: https://github.com/getgrav/grav-plugin-guestbook/blob/develop/README.md
 license: MIT
 
 dependencies:
-  - { name: grav, version: '>=1.6.0' }
+  - { name: grav, version: '>=1.7.0' }
   - form
   - email
 
