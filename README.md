@@ -58,7 +58,7 @@ form:
         - name: g-recaptcha-response
           label: Captcha
           type: captcha
-          recatpcha_site_key: 2jj21oiej23ioej23iojeoi32jeoi3
+          recaptcha_site_key: 2jj21oiej23ioej23iojeoi32jeoi3
           recaptcha_not_validated: 'Captcha not valid!'
           validate:
             required: true
@@ -71,7 +71,7 @@ form:
 
     process:
         - captcha:
-            recatpcha_secret: ej32uej3u2ijeiu32jeiu3jeuj32ui
+            recaptcha_secret: ej32uej3u2ijeiu32jeiu3jeuj32ui
         - email:
             subject: "[Site Guestbook] {{ form.value.name|e }}"
             body: "{% include 'forms/data.html.twig' %}"
