@@ -21,6 +21,17 @@
     
     <script>    
         $(function() {
+            function escapeHtml(value) {
+                var characters = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+                return String(value == null ? '' : value).replace(/[&<>"']/g, function(character) {
+                    return characters[character];
+                });
+            }
+
+            function actionUrl(action, value) {
+                return window.location + '/' + action + ':' + encodeURIComponent(value) + '/admin-nonce:' + encodeURIComponent(GravAdmin.config.admin_nonce);
+            }
+
             var currentPage = 0;
             $(document).on('click tap', '.js__load', function(event) {
                $.getJSON(window.location + '/page:' + /*(currentPage + 1)*/ "all")
@@ -30,27 +41,27 @@
                     response.messages.forEach(function(message) {
                         var st = "";
                         if (event.target.id == "all") {
-                            st = '<em class="page-item ' +  message.uuid + '"><ul>';
-                            st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
-                            st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
-                            st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div></li>';                               
+                            st = '<em class="page-item ' + escapeHtml(message.uuid) + '"><ul>';
+                            st = st + '<li><div class="author row"> <strong>Author</strong>: ' + escapeHtml(message.author) + '</div></li>';
+                            st = st + '<li><div class="message row"> <strong>Message</strong>: ' + escapeHtml(message.text) + '</div></li>';
+                            st = st + '<li><div class="date row"> <strong>Date</strong>: ' + escapeHtml(message.date) + '</div></li>';
                             if (message.moderated != 1) {
-                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + escapeHtml(message.uuid) + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + escapeHtml(message.uuid) + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
                             
 
                             } else {
-                                st = st + '<li><div class="moderate row"><form> <div class="buttons"> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>Delete</button> </div> </form> </div></li>';
+                                st = st + '<li><div class="moderate row"><form> <div class="buttons"> <button type="button" id="' + escapeHtml(message.uuid) + '" class="button js__delete"><i class="fa fa-trash"></i>Delete</button> </div> </form> </div></li>';
                             }
 
                             st = st + '</ul></em><br /> <br />';
                             $('.types').html("approved and unapproved");
                         } else {
                             if (message.moderated != 1) {
-                                st = '<em class="page-item ' +  message.uuid + '"><ul>';
-                                st = st + '<li><div class="author row"> <strong>Author</strong>: ' + message.author + '</div></li>';
-                                st = st + '<li><div class="message row"> <strong>Message</strong>: ' + message.text + '</div></li>';
-                                st = st + '<li><div class="date row"> <strong>Date</strong>: ' + message.date + '</div>';
-                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + message.uuid + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + message.uuid + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
+                                st = '<em class="page-item ' + escapeHtml(message.uuid) + '"><ul>';
+                                st = st + '<li><div class="author row"> <strong>Author</strong>: ' + escapeHtml(message.author) + '</div></li>';
+                                st = st + '<li><div class="message row"> <strong>Message</strong>: ' + escapeHtml(message.text) + '</div></li>';
+                                st = st + '<li><div class="date row"> <strong>Date</strong>: ' + escapeHtml(message.date) + '</div>';
+                                st = st + '<li><div class="moderate row"><form><button type="button" id="' + escapeHtml(message.uuid) + '" class="button js__approve"><i class="fa fa-check-circle"></i>Approve</button> <button type="button" id="' + escapeHtml(message.uuid) + '" class="button js__delete"><i class="fa fa-trash"></i>delete</button></form> </div></li>';
                                 st = st + '</ul><br /> <br /></em>';
                             }
                         }
@@ -78,7 +89,7 @@
                 document.getElementById('load').click();
             });
             $(document).on('click tap', '.js__delete', function(event) {
-                $.getJSON(window.location + '/delete:' + event.target.id)
+                $.getJSON(actionUrl('delete', event.target.id))
                     .success(function(response) {
                          event.target.parentNode.removeChild(event.target);
                          document.getElementsByClassName(event.target.id)[0].remove();
@@ -87,7 +98,7 @@
                 });        
              });
              $(document).on('click tap', '.js__approve', function(event) {
-                $.getJSON(window.location + '/approve:' + event.target.id)
+                $.getJSON(actionUrl('approve', event.target.id))
                     .success(function(response) {
                         event.target.parentNode.removeChild(event.target);
                     }).error(function() {
@@ -95,7 +106,7 @@
                 });        
              });
              $(document).on('click tap', '.js__approveAll', function(event) {
-                $.getJSON(window.location + '/approveAll:1')
+                $.getJSON(actionUrl('approveAll', '1'))
                     .success(function(response) {
                         event.target.parentNode.removeChild(event.target);
                     }).error(function() {

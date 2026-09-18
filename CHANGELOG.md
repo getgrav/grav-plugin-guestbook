@@ -1,3 +1,10 @@
+# v0.5.2
+## 09/17/2026
+
+1. [](#bugfix)
+    * **[security] Approving and deleting messages now requires an authorized admin and a valid security token.** Moderation ran on a plain link with no check on who was asking, so a logged-in moderator could be tricked into approving or deleting messages by visiting another site. Thanks to @AlpetGexha
+    * **[security] Guestbook messages are now shown as text rather than markup, on the site and in the admin.** A message containing HTML could run script in the browser of anyone reading the guestbook or moderating it — and anyone can post a message. Thanks to @AlpetGexha
+
 # v0.5.1
 ## 05/01/2026
 

@@ -7,6 +7,7 @@ use Grav\Common\Page\Page;
 use Grav\Common\Page\Pages;
 use Grav\Common\Plugin;
 use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
+use Grav\Common\Utils;
 use Grav\Common\User\User;
 use RocketTheme\Toolbox\File\File;
 use RocketTheme\Toolbox\Event\Event;
@@ -127,6 +128,11 @@ class GuestbookPlugin extends Plugin
                 $this->grav['twig']->guestbookMessages = $messages;
             }
         } else {
+            $user = $this->grav['user'];
+            if (!$user->authorize('admin.guestbook') && !$user->authorize('admin.super')) {
+                return;
+            }
+
             if ($page == "all") {
                 $messages = $this->getMessages("all");
                 echo json_encode($messages);
@@ -141,18 +147,33 @@ class GuestbookPlugin extends Plugin
 
             $del = $this->grav['uri']->param('delete');
             if ($del != false) {
+                $nonce = $this->grav['uri']->param('admin-nonce');
+                if (!$nonce || !Utils::verifyNonce($nonce, 'admin-form')) {
+                    http_response_code(403);
+                    exit();
+                }
                 $this->deleteMessage($del);
                 echo json_encode($del);
                 exit();
             }
             $app = $this->grav['uri']->param('approve');
             if ($app != false) {
+                $nonce = $this->grav['uri']->param('admin-nonce');
+                if (!$nonce || !Utils::verifyNonce($nonce, 'admin-form')) {
+                    http_response_code(403);
+                    exit();
+                }
                 $this->approveMessage($app);
                 echo json_encode($app);
                 exit();
             }
             $appa = $this->grav['uri']->param('approveAll');
             if ($appa != false) {
+                $nonce = $this->grav['uri']->param('admin-nonce');
+                if (!$nonce || !Utils::verifyNonce($nonce, 'admin-form')) {
+                    http_response_code(403);
+                    exit();
+                }
                 $this->approveAll();
                 echo json_encode($appa);
                 exit();
