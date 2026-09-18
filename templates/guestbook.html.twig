@@ -16,8 +16,14 @@
                     currentPage = parseInt(response.page);
 
                     response.messages.forEach(function(message) {
-                        $('.js__messages-container').append('<tr>' +
-                                '<td>' + message.text + '<br />{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t}} ' + message.date + ' {{'PLUGIN_GUESTBOOK.BY'|t}} ' + message.author + '</td></tr>');
+                        var cell = $('<td>');
+                        cell.append(document.createTextNode(String(message.text == null ? '' : message.text)));
+                        cell.append('<br />');
+                        cell.append(document.createTextNode(
+                            '{{'PLUGIN_GUESTBOOK.WRITTEN_ON'|t|e('js')}} ' + String(message.date == null ? '' : message.date) +
+                            ' {{'PLUGIN_GUESTBOOK.BY'|t|e('js')}} ' + String(message.author == null ? '' : message.author)
+                        ));
+                        $('.js__messages-container').append($('<tr>').append(cell));
                     });
 
                     var totalRetrieved = response.itemsPerPage * (parseInt(response.page) + 1);
